@@ -17,3 +17,6 @@ services:
         generateValue: true
       - key: DATABASE_URL
         sync: false
+      # Optional: Neon's direct (non -pooler) URL, used only to create tables at startup.
+      - key: DATABASE_URL_UNPOOLED
+        sync: false

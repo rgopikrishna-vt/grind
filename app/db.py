@@ -66,7 +66,9 @@ class _PostgresDB:
         from psycopg.rows import dict_row
 
         self._errors = psycopg.errors
-        self.conn = psycopg.connect(url, row_factory=dict_row, connect_timeout=15)
+        # Neon's -pooler endpoint is PgBouncer in transaction mode: disable psycopg's
+        # automatic server-side prepared statements so pooled backends can be swapped freely.
+        self.conn = psycopg.connect(url, row_factory=dict_row, connect_timeout=15, prepare_threshold=None)
 
     def execute(self, sql, params=()):
         try:
@@ -111,8 +113,12 @@ class _SqliteDB:
         self.conn.close()
 
 
-def _connect(app):
+def _connect(app, direct=False):
     url = app.config.get("DATABASE_URL")
+    # Schema changes go over the direct connection when one is configured (Neon recommends
+    # unpooled connections for migrations); request traffic uses the pooled DATABASE_URL.
+    if direct and is_postgres(url) and is_postgres(app.config.get("DATABASE_URL_UNPOOLED")):
+        url = app.config["DATABASE_URL_UNPOOLED"]
     if is_postgres(url):
         return _PostgresDB(url)
     return _SqliteDB(app.config["DATABASE"])
@@ -132,7 +138,7 @@ def close_db(_=None):
 
 def init_app(app):
     app.teardown_appcontext(close_db)
-    db = _connect(app)
+    db = _connect(app, direct=True)
     try:
         pk = POSTGRES_PK if is_postgres(app.config.get("DATABASE_URL")) else SQLITE_PK
         db.executescript(SCHEMA.format(pk=pk))

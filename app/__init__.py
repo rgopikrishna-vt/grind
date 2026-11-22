@@ -25,6 +25,8 @@ def create_app(test_config=None):
     app.config.update(
         # Set DATABASE_URL to a postgres:// URL (e.g. Neon) to use Postgres; otherwise SQLite is used.
         DATABASE_URL=os.environ.get("DATABASE_URL", ""),
+        # Optional direct (non -pooler) Neon URL, used only for creating the schema at startup.
+        DATABASE_URL_UNPOOLED=os.environ.get("DATABASE_URL_UNPOOLED", ""),
         DATABASE=os.environ.get("INTERVIEWIQ_DB", os.path.join(app.instance_path, "interviewiq.sqlite3")),
         EXAMS_DIR=os.environ.get("INTERVIEWIQ_EXAMS", os.path.join(os.path.dirname(app.root_path), "exams")),
         # Seconds of slack after the deadline for the final auto-submit request to arrive.

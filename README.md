@@ -22,7 +22,7 @@ pip install -r requirements.txt
 flask --app wsgi run --debug
 ```
 
-Open http://127.0.0.1:5000 and create an account. Without `DATABASE_URL`, data is stored in `instance/interviewiq.sqlite3`. To use Postgres locally, export `DATABASE_URL=postgresql://...` first. Tables are created automatically on startup.
+Open http://127.0.0.1:5000 and create an account. Without `DATABASE_URL`, data is stored in `instance/interviewiq.sqlite3`. To use Postgres locally, export `DATABASE_URL=postgresql://...` first. Tables are created automatically on startup. On macOS, run gunicorn locally without `--preload` when using Postgres: macOS's DNS resolver crashes (SIGSEGV) in workers forked after the master has connected. Linux hosts such as Render are unaffected.
 
 Run the tests with `pip install -r requirements-dev.txt && pytest`. They run on SQLite; set `TEST_DATABASE_URL` to a throwaway Postgres database to run them on Postgres as well (its tables are dropped).
 
@@ -68,7 +68,7 @@ Python Basics has 130 questions in 60 minutes, about 28 seconds per question. Th
 ## Deploy to Render with Neon
 
 1. In [Neon](https://console.neon.tech), create a project and copy its connection string (it looks like `postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`). The pooled connection string works too.
-2. In Render choose **New → Blueprint**, pick this repo, and apply. When asked for `DATABASE_URL`, paste the Neon connection string.
+2. In Render choose **New → Blueprint**, pick this repo, and apply. When asked for `DATABASE_URL`, paste the Neon pooled connection string (host ends in `-pooler`); optionally set `DATABASE_URL_UNPOOLED` to the direct one, which is used only to create tables at startup.
 
 The Blueprint creates a free web service running gunicorn and generates a `SECRET_KEY`. The app creates its tables in Neon on first start. Because all data lives in Neon, Render's free instance is fine: redeploys and restarts lose nothing. Free Render services sleep after 15 minutes idle, so the first request after a quiet spell takes a few extra seconds.
 
@@ -77,6 +77,7 @@ The Blueprint creates a free web service running gunicorn and generates a `SECRE
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `SECRET_KEY` | random, saved in `instance/secret_key` | Signs session cookies |
-| `DATABASE_URL` | unset | Postgres connection string (e.g. Neon). When set, Postgres is used instead of SQLite |
+| `DATABASE_URL` | unset | Postgres connection string (e.g. Neon pooled URL). When set, Postgres is used instead of SQLite |
+| `DATABASE_URL_UNPOOLED` | unset | Optional direct (non-pooled) Postgres URL, used only for schema creation at startup |
 | `INTERVIEWIQ_DB` | `instance/interviewiq.sqlite3` | SQLite database path, used when `DATABASE_URL` is unset |
 | `INTERVIEWIQ_EXAMS` | `exams/` | Folder of exam JSON files |
