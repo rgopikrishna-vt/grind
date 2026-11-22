@@ -6,14 +6,17 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>{% block title %}Grind{% endblock %} · Grind</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <header class="topbar">
     <a class="brand" href="{{ url_for('views.dashboard') }}">Grind</a>
     {% if g.user %}
     <nav>
-      <a href="{{ url_for('views.dashboard') }}">Exams</a>
-      <a href="{{ url_for('views.results') }}">My results</a>
+      <a href="{{ url_for('views.dashboard') }}" {% if request.blueprint == 'views' and request.endpoint != 'views.results' %}class="active"{% endif %}>Exams</a>
+      <a href="{{ url_for('practice.index') }}" {% if request.endpoint and request.endpoint.startswith('practice.') and 'notebook' not in request.endpoint %}class="active"{% endif %}>Practice</a>
+      <a href="{{ url_for('practice.notebooks') }}" {% if request.endpoint and 'notebook' in request.endpoint %}class="active"{% endif %}>Scratchpad</a>
+      <a href="{{ url_for('views.results') }}" {% if request.endpoint == 'views.results' %}class="active"{% endif %}>My results</a>
       <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button class="linkish" type="submit">Log out <span class="muted">({{ g.user.username }})</span></button>

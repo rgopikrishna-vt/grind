@@ -1,4 +1,5 @@
-"""Tiny, safe Markdown subset for question text: ```fenced code```, `inline code`, **bold**, *italic*."""
+"""Tiny, safe Markdown subset for question text: ```fenced code```, `inline code`, **bold**, *italic*,
+and "- " bullet lists."""
 import re
 
 from markupsafe import Markup, escape
@@ -36,8 +37,20 @@ def _inline(text):
     out = BOLD_RE.sub(r"<strong>\1</strong>", out)
     out = ITALIC_RE.sub(r"<em>\1</em>", out)
     out = re.sub(r"\x00(\d+)\x00", lambda m: codes[int(m.group(1))], out)
-    paras = [p.replace("\n", "<br>") for p in re.split(r"\n\s*\n", out)]
-    return "".join(f"<p>{p}</p>" for p in paras)
+    return "".join(_block(p) for p in re.split(r"\n\s*\n", out))
+
+
+def _block(par):
+    lines = par.split("\n")
+    if all(re.match(r"\s*[-*] ", ln) or (i and ln.startswith("  ")) for i, ln in enumerate(lines)):
+        items = []
+        for ln in lines:
+            if re.match(r"\s*[-*] ", ln):
+                items.append(re.sub(r"^\s*[-*] ", "", ln))
+            else:
+                items[-1] += " " + ln.strip()
+        return "<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>"
+    return f"<p>{'<br>'.join(lines)}</p>"
 
 
 def md_inline(text):

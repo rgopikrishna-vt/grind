@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Practice{% endblock %}
+{% block content %}
+<div class="practice-head">
+  <div>
+    <h1>Practice</h1>
+    <p class="muted">Write Python, run it, and check it against tests. Everything runs in your browser. Your code saves as you type.</p>
+  </div>
+  <div class="banner-actions">
+    {% if next_ex %}<a class="btn primary" href="{{ url_for('practice.exercise', exercise_id=next_ex.id) }}">{{ "Continue" if solved else "Start" }}: {{ next_ex.title }}</a>{% endif %}
+    <a class="btn" href="{{ url_for('practice.notebooks') }}">Scratchpad</a>
+  </div>
+</div>
+
+{% if total %}
+<div class="card progress-card">
+  <div class="progress-line"><strong>{{ solved }} of {{ total }} solved</strong><span class="muted small">{{ (100 * solved / total)|round|int }}%</span></div>
+  <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * solved / total)|round|int }}%"></span></div>
+</div>
+
+<div class="filters" role="toolbar" aria-label="Filter exercises">
+  <button type="button" class="chip active" data-filter="all">All</button>
+  <button type="button" class="chip" data-filter="todo">Not solved</button>
+  <button type="button" class="chip" data-filter="solved">Solved</button>
+  <span class="filter-sep"></span>
+  <button type="button" class="chip" data-diff="easy">Easy</button>
+  <button type="button" class="chip" data-diff="medium">Medium</button>
+  <button type="button" class="chip" data-diff="hard">Hard</button>
+</div>
+
+{% for gr in groups %}
+<section class="topic" data-topic>
+  <h2 class="topic-title">{{ gr.topic }} <span class="muted small">{{ gr.solved }}/{{ gr.rows|length }}</span></h2>
+  <ul class="ex-list">
+  {% for it in gr.rows %}
+    <li class="ex-row {{ it.state }}" data-state="{{ it.state }}" data-diff="{{ it.ex.difficulty }}">
+      <span class="ex-state" title="{{ {'solved': 'Solved', 'started': 'Started', 'new': 'Not started'}[it.state] }}">{{ {'solved': '✓', 'started': '•', 'new': ''}[it.state] }}</span>
+      <span class="ex-num muted">{{ it.ex.number }}</span>
+      <a class="ex-title" href="{{ url_for('practice.exercise', exercise_id=it.ex.id) }}">{{ it.ex.title }}</a>
+      <span class="pill diff-{{ it.ex.difficulty }}">{{ it.ex.difficulty }}</span>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+<p class="muted small" id="empty-filter" hidden>No exercises match this filter.</p>
+{% else %}
+<p class="muted">No exercises are installed. Add Markdown files to the <code>practice/</code> folder.</p>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var state = "all", diff = null;
+  function apply() {
+    var any = false;
+    document.querySelectorAll("[data-topic]").forEach(function (sec) {
+      var shown = 0;
+      sec.querySelectorAll(".ex-row").forEach(function (row) {
+        var s = row.dataset.state;
+        var ok = (state === "all" || (state === "solved") === (s === "solved")) && (!diff || row.dataset.diff === diff);
+        row.hidden = !ok;
+        if (ok) shown++;
+      });
+      sec.hidden = !shown;
+      any = any || shown > 0;
+    });
+    document.getElementById("empty-filter").hidden = any;
+  }
+  document.querySelectorAll("[data-filter]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state = b.dataset.filter;
+      document.querySelectorAll("[data-filter]").forEach(function (x) { x.classList.toggle("active", x === b); });
+      apply();
+    });
+  });
+  document.querySelectorAll("[data-diff]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      diff = diff === b.dataset.diff ? null : b.dataset.diff;
+      document.querySelectorAll("[data-diff]").forEach(function (x) { x.classList.toggle("active", x.dataset.diff === diff); });
+      apply();
+    });
+  });
+})();
+</script>
+{% endblock %}

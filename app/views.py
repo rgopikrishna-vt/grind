@@ -5,6 +5,7 @@ from flask import Blueprint, abort, current_app, flash, g, jsonify, redirect, re
 from .auth import login_required
 from .db import from_iso, get_db, now, to_iso
 from .exams import all_exams, get_exam
+from .practice_views import practice_summary
 
 bp = Blueprint("views", __name__)
 
@@ -110,7 +111,7 @@ def dashboard():
         "SELECT * FROM attempts WHERE user_id = ? AND status != 'in_progress' ORDER BY id DESC LIMIT 5",
         (g.user["id"],),
     ).fetchall()
-    return render_template("dashboard.html", cards=cards, recent=_summaries(recent))
+    return render_template("dashboard.html", cards=cards, recent=_summaries(recent), practice=practice_summary(g.user["id"]))
 
 
 @bp.route("/exams/<exam_id>")

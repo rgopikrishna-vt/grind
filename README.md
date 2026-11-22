@@ -12,6 +12,8 @@ Built with Flask. It stores data in Postgres (for example [Neon](https://neon.te
 - One question at a time with a navigator, flags, and keyboard shortcuts (A–D answer, ← → move, F flag).
 - Results page with score, pass/fail, time used, a per-section breakdown, and a review of every question showing your answer, the correct answer and the explanation (filter by wrong, unanswered or correct).
 - Retake any exam; "My results" lists every finished attempt.
+- **Practice**: 35 auto-graded Python exercises matched to the Python Basics topics, each a notebook-style page with the task, examples, your code cell, a "Try it" cell, hints revealed one at a time, and a reference solution with an explanation. Your code saves as you type, and solved exercises are tracked per user.
+- **Scratchpad**: free Python notebooks with code and Markdown cells that share variables like Jupyter, an optional stdin box for `input()`, and autosave.
 - Light and dark mode, works on phones.
 
 ## Run locally
@@ -65,6 +67,55 @@ The converter checks that every question has an answer in the key and that the a
 
 Python Basics has 130 questions in 60 minutes, about 28 seconds per question. That is deliberately tight. Change `duration_minutes` in the JSON to adjust it.
 
+## Practice exercises
+
+Python for the Practice section runs **in the browser**, never on the server: [Pyodide](https://pyodide.org) (CPython compiled to WebAssembly) runs in a Web Worker, so a stuck loop can be stopped without freezing the page. Submit times out after 10 seconds. The first visit downloads Pyodide (about 10 MB, then cached by the browser). Pages load it from jsDelivr; set `PYODIDE_URL` to host it elsewhere. The code editor is CodeMirror 5 from cdnjs, with a plain textarea as a fallback.
+
+Grading happens in the browser too, so the server trusts the result it is sent. That's fine for self-study, but don't use it for proctored tests.
+
+Exercises are Markdown files in `practice/`, one per file, listed in filename order. Add a file and restart to publish it:
+
+````markdown
+---
+id: two-sum
+title: Two Sum
+topic: Lists
+difficulty: easy            # easy, medium or hard
+---
+
+## Prompt
+Markdown text. `code`, **bold**, fenced code and "- " lists work.
+
+## Starter
+```python
+def two_sum(nums, target):
+    pass
+```
+
+## Examples
+```python
+assert two_sum([2, 7, 11, 15], 9) == [0, 1]
+```
+
+## Tests
+```python
+assert two_sum([3, 3], 6) == [0, 1]
+```
+
+## Hints
+- One bullet per hint, revealed one at a time.
+
+## Solution
+```python
+def two_sum(nums, target): ...
+```
+
+## Explanation
+Optional Markdown shown with the solution.
+````
+
+Every top-level `assert` in Examples or Tests is one test. Examples are shown to the learner; Tests stay hidden, though for a failed `assert x == y` the learner still sees what they got and what was expected. Any other statement in those blocks runs as setup. `pytest` runs each reference solution through the same runner the browser uses (`app/static/practice/runner.py`), so a broken exercise fails the build. It also checks that the starter code does not already pass.
+
 ## Deploy to Render with Neon
 
 1. In [Neon](https://console.neon.tech), create a project and copy its connection string (it looks like `postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`). The pooled connection string works too.
@@ -81,3 +132,5 @@ The Blueprint creates a free web service running gunicorn and generates a `SECRE
 | `DATABASE_URL_UNPOOLED` | unset | Optional direct (non-pooled) Postgres URL, used only for schema creation at startup |
 | `INTERVIEWIQ_DB` | `instance/interviewiq.sqlite3` | SQLite database path, used when `DATABASE_URL` is unset |
 | `INTERVIEWIQ_EXAMS` | `exams/` | Folder of exam JSON files |
+| `GRIND_PRACTICE` | `practice/` | Folder of practice exercise Markdown files |
+| `PYODIDE_URL` | `https://cdn.jsdelivr.net/npm/pyodide@0.29.5/` | Where browsers load Pyodide from (must end with `/`) |
