@@ -20,6 +20,7 @@
   --code-bg: #0d1014; --shadow: none; color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { margin: 0; }
 body { background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 a { color: var(--accent); }
@@ -188,7 +189,7 @@ dialog::backdrop { background: rgba(0,0,0,.45); }
 .crumbs a { text-decoration: none; }
 .nb-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .nb-title-row h1 { margin: 4px 0; }
-.nb-title-input { font: 700 1.5rem/1.2 inherit; font-family: inherit; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -8px; min-width: 0; flex: 1 1 240px; }
+.nb-title-input { font-family: inherit; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -8px; min-width: 0; flex: 1 1 240px; }
 .nb-title-input:hover { border-color: var(--border); }
 .nb-title-input:focus { outline: 2px solid var(--accent); background: var(--surface); }
 .kernel-status { margin-left: auto; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
@@ -215,7 +216,7 @@ dialog::backdrop { background: rgba(0,0,0,.45); }
 .linkish.accent { color: var(--accent); font-weight: 600; }
 .btn.ghost[hidden], .btn[hidden] { display: none; }
 
-.CodeMirror { height: auto; min-height: 3.2em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.5; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); color: var(--text); }
+.cell .CodeMirror, .CodeMirror { height: auto; min-height: 3.2em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.5; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); color: var(--text); }
 .CodeMirror-focused { border-color: var(--accent); }
 .CodeMirror-gutters { background: var(--surface-2); border-right: 1px solid var(--border); border-radius: 8px 0 0 8px; }
 .CodeMirror-linenumber { color: var(--muted); }

@@ -121,6 +121,7 @@
     var code = editor.getValue();
     output.clear();
     resultsEl.hidden = true;
+    resultsEl.innerHTML = "";
     submitBtn.disabled = true;
     var groups = [["example", EX.examples], ["hidden", EX.tests]];
     kernel.grade(code, groups, { onStream: output.append.bind(output), timeoutMs: 10000 }).then(function (res) {
