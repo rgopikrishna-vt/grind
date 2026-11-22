@@ -75,10 +75,10 @@ def index():
             p = progress.get(ex["id"])
             state = "solved" if p and p["solved_at"] else ("started" if p and (p["code"] or p["attempts"]) else "new")
             items.append({"ex": ex, "state": state, "attempts": p["attempts"] if p else 0})
-        groups.append({"topic": topic, "items": items, "solved": sum(1 for i in items if i["state"] == "solved")})
+        groups.append({"topic": topic, "rows": items, "solved": sum(1 for i in items if i["state"] == "solved")})
     total = len(all_exercises())
     solved = sum(gr["solved"] for gr in groups)
-    nxt = next((i["ex"] for gr in groups for i in gr["items"] if i["state"] != "solved"), None)
+    nxt = next((i["ex"] for gr in groups for i in gr["rows"] if i["state"] != "solved"), None)
     return render_template("practice/index.html", groups=groups, total=total, solved=solved, next_ex=nxt)
 
 

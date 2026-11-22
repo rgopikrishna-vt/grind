@@ -30,9 +30,9 @@
 
 {% for gr in groups %}
 <section class="topic" data-topic>
-  <h2 class="topic-title">{{ gr.topic }} <span class="muted small">{{ gr.solved }}/{{ gr.items|length }}</span></h2>
+  <h2 class="topic-title">{{ gr.topic }} <span class="muted small">{{ gr.solved }}/{{ gr.rows|length }}</span></h2>
   <ul class="ex-list">
-  {% for it in gr.items %}
+  {% for it in gr.rows %}
     <li class="ex-row {{ it.state }}" data-state="{{ it.state }}" data-diff="{{ it.ex.difficulty }}">
       <span class="ex-state" title="{{ {'solved': 'Solved', 'started': 'Started', 'new': 'Not started'}[it.state] }}">{{ {'solved': '✓', 'started': '•', 'new': ''}[it.state] }}</span>
       <span class="ex-num muted">{{ it.ex.number }}</span>
