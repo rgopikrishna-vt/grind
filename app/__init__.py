@@ -1,12 +1,25 @@
 import os
 import secrets
 
+from dotenv import load_dotenv
 from flask import Flask
 
 from . import db, exams, auth, views, render
 
 
+def _load_env_files():
+    """Load .env.local then .env from the project root (e.g. DATABASE_URL pulled by `neon deploy`).
+    Real environment variables always win, so Render's settings take precedence."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for name in (".env.local", ".env"):
+        path = os.path.join(root, name)
+        if os.path.exists(path):
+            load_dotenv(path, override=False)
+
+
 def create_app(test_config=None):
+    if not (test_config or {}).get("TESTING"):
+        _load_env_files()
     app = Flask(__name__, instance_relative_config=True)
     os.makedirs(app.instance_path, exist_ok=True)
     app.config.update(

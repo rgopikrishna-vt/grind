@@ -4,3 +4,8 @@ __pycache__/
 venv/
 instance/
 .pytest_cache/
+.neon
+node_modules/
+.env
+.env.local
+.env.*.local
