@@ -1,0 +1,22 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# SQLite lives on a persistent disk so accounts and results survive deploys.
+# Persistent disks need a paid instance type (Starter or above).
+services:
+  - type: web
+    name: grind
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --workers 2 --bind 0.0.0.0:$PORT
+    healthCheckPath: /login
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: INTERVIEWIQ_DB
+        value: /var/data/grind.sqlite3
+    disk:
+      name: grind-data
+      mountPath: /var/data
+      sizeGB: 1

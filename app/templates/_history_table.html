@@ -1,0 +1,21 @@
+{% if history %}
+<div class="table-wrap">
+<table class="history">
+  <thead><tr>{% if show_exam %}<th>Exam</th>{% endif %}<th>Taken</th><th>Score</th><th>Time used</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for h in history %}
+    <tr>
+      {% if show_exam %}<td>{{ h.exam_title }}</td>{% endif %}
+      <td><time data-local datetime="{{ h.row.started_at }}">{{ h.row.started_at }}</time></td>
+      <td><strong>{{ h.row.score }}/{{ h.row.total }}</strong> <span class="pill {{ 'pass' if h.passed else 'fail' }}">{{ h.percent }}%</span></td>
+      <td>{{ h.duration or "–" }}</td>
+      <td>{{ "Time ran out" if h.row.status == "timed_out" else "Submitted" }}</td>
+      <td><a href="{{ url_for('views.result', attempt_id=h.row.id) }}">Review</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="muted">No finished attempts yet.</p>
+{% endif %}

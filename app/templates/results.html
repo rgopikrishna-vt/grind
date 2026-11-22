@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}My results{% endblock %}
+{% block content %}
+<h1>My results</h1>
+{% with show_exam = true %}{% include "_history_table.html" %}{% endwith %}
+{% endblock %}

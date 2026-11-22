@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ "Create account" if mode == "register" else "Log in" }}{% endblock %}
+{% block content %}
+<div class="auth-card card">
+  <h1>{{ "Create your account" if mode == "register" else "Welcome back" }}</h1>
+  <p class="muted">{{ "Sign up to take timed exams and track your scores." if mode == "register" else "Log in to continue practising." }}</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Username
+      <input name="username" autocomplete="username" required minlength="3" maxlength="32" value="{{ request.form.username or '' }}" autofocus>
+    </label>
+    <label>Password
+      <input name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required {% if mode == 'register' %}minlength="8"{% endif %}>
+    </label>
+    {% if mode == "register" %}
+    <label>Confirm password
+      <input name="confirm" type="password" autocomplete="new-password" required minlength="8">
+    </label>
+    {% endif %}
+    <button class="btn primary wide" type="submit">{{ "Create account" if mode == "register" else "Log in" }}</button>
+  </form>
+  <p class="muted small center">
+    {% if mode == "register" %}Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+    {% else %}New here? <a href="{{ url_for('auth.register') }}">Create an account</a>{% endif %}
+  </p>
+</div>
+{% endblock %}

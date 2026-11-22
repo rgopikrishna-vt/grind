@@ -1,0 +1,3250 @@
+{
+  "id": "python-basics",
+  "title": "Python Basics",
+  "description": "130 multiple-choice questions covering Python fundamentals, from print() and operators to closures, collections, heapq, bisect and common gotchas.",
+  "duration_minutes": 60,
+  "questions": [
+    {
+      "id": 1,
+      "section": "Section 1 — What Is Python, and How Do You Run It",
+      "prompt": "What command runs a script saved as `hello.py` from the terminal?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`java hello.py`"
+        },
+        {
+          "key": "B",
+          "text": "`python3 hello.py`"
+        },
+        {
+          "key": "C",
+          "text": "`hello.py --run`"
+        },
+        {
+          "key": "D",
+          "text": "`run hello.py`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`python3 hello.py` runs a script file."
+    },
+    {
+      "id": 2,
+      "section": "Section 1 — What Is Python, and How Do You Run It",
+      "prompt": "What does the Python interactive interpreter (REPL) prompt look like?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`$`"
+        },
+        {
+          "key": "B",
+          "text": "`>>>`"
+        },
+        {
+          "key": "C",
+          "text": "`#`"
+        },
+        {
+          "key": "D",
+          "text": "`->`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`>>>` is the REPL's prompt."
+    },
+    {
+      "id": 3,
+      "section": "Section 1 — What Is Python, and How Do You Run It",
+      "prompt": "True or False: Python code must be compiled into a separate binary file by the programmer before it can run.",
+      "options": [
+        {
+          "key": "A",
+          "text": "True"
+        },
+        {
+          "key": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Python interprets/translates as it runs; there's no separate compile step you perform."
+    },
+    {
+      "id": 4,
+      "section": "Section 2 — Your First Program: `print()` and Comments",
+      "prompt": "What does `print(\"a\", \"b\")` output?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`a,b`"
+        },
+        {
+          "key": "B",
+          "text": "`ab`"
+        },
+        {
+          "key": "C",
+          "text": "`a b`"
+        },
+        {
+          "key": "D",
+          "text": "`[\"a\",\"b\"]`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`print()` joins its arguments with a single space by default."
+    },
+    {
+      "id": 5,
+      "section": "Section 2 — Your First Program: `print()` and Comments",
+      "prompt": "Which of these is a valid Python comment?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`// this is a comment`"
+        },
+        {
+          "key": "B",
+          "text": "`/* comment */`"
+        },
+        {
+          "key": "C",
+          "text": "`# this is a comment`"
+        },
+        {
+          "key": "D",
+          "text": "`-- comment`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`#` starts a comment."
+    },
+    {
+      "id": 6,
+      "section": "Section 2 — Your First Program: `print()` and Comments",
+      "prompt": "What is printed by:\n```python\n# print(\"hidden\")\nprint(\"visible\")\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`hidden`"
+        },
+        {
+          "key": "B",
+          "text": "`visible`"
+        },
+        {
+          "key": "C",
+          "text": "`hidden` then `visible`"
+        },
+        {
+          "key": "D",
+          "text": "Nothing — syntax error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the `#` line is ignored entirely; only `\"visible\"` prints."
+    },
+    {
+      "id": 7,
+      "section": "Section 3 — Variables and Basic Types",
+      "prompt": "Which of these is a valid Python variable name?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`2nd_place`"
+        },
+        {
+          "key": "B",
+          "text": "`_total`"
+        },
+        {
+          "key": "C",
+          "text": "`total-score`"
+        },
+        {
+          "key": "D",
+          "text": "`total score`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`_total` follows the naming rules (letters/digits/underscores, doesn't start with a digit)."
+    },
+    {
+      "id": 8,
+      "section": "Section 3 — Variables and Basic Types",
+      "prompt": "What is the type of `x = 5.0`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`int`"
+        },
+        {
+          "key": "B",
+          "text": "`float`"
+        },
+        {
+          "key": "C",
+          "text": "`str`"
+        },
+        {
+          "key": "D",
+          "text": "`bool`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "any number with a decimal point is a `float`."
+    },
+    {
+      "id": 9,
+      "section": "Section 3 — Variables and Basic Types",
+      "prompt": "Which of these values is \"falsy\" in Python?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"False\"` (the string)"
+        },
+        {
+          "key": "B",
+          "text": "`1`"
+        },
+        {
+          "key": "C",
+          "text": "`[]`"
+        },
+        {
+          "key": "D",
+          "text": "`\" \"` (a single space string)"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`[]` (empty list) is falsy; a non-empty string like `\"False\"` or `\" \"` is truthy regardless of its content."
+    },
+    {
+      "id": 10,
+      "section": "Section 3 — Variables and Basic Types",
+      "prompt": "What does `type(True)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`<class 'int'>`"
+        },
+        {
+          "key": "B",
+          "text": "`<class 'bool'>`"
+        },
+        {
+          "key": "C",
+          "text": "`<class 'str'>`"
+        },
+        {
+          "key": "D",
+          "text": "`<class 'NoneType'>`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`bool` is `True`/`False`'s type."
+    },
+    {
+      "id": 11,
+      "section": "Section 3 — Variables and Basic Types",
+      "prompt": "What is the value and type of `x = None`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`0`, `int`"
+        },
+        {
+          "key": "B",
+          "text": "`\"\"`, `str`"
+        },
+        {
+          "key": "C",
+          "text": "`None`, `NoneType`"
+        },
+        {
+          "key": "D",
+          "text": "`False`, `bool`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`None`'s type is literally `NoneType`."
+    },
+    {
+      "id": 12,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `7 / 2` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`3`"
+        },
+        {
+          "key": "B",
+          "text": "`3.5`"
+        },
+        {
+          "key": "C",
+          "text": "`3.0`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`/` always returns a float, `3.5`."
+    },
+    {
+      "id": 13,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `7 // 2` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`3.5`"
+        },
+        {
+          "key": "B",
+          "text": "`3`"
+        },
+        {
+          "key": "C",
+          "text": "`4`"
+        },
+        {
+          "key": "D",
+          "text": "`3.0`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`//` floors the result to an int, `3`."
+    },
+    {
+      "id": 14,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `-7 // 2` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`-3`"
+        },
+        {
+          "key": "B",
+          "text": "`-4`"
+        },
+        {
+          "key": "C",
+          "text": "`-3.5`"
+        },
+        {
+          "key": "D",
+          "text": "`4`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "floor division rounds toward negative infinity: `-3.5` floors to `-4`."
+    },
+    {
+      "id": 15,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `7 % 3` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`2`"
+        },
+        {
+          "key": "B",
+          "text": "`1`"
+        },
+        {
+          "key": "C",
+          "text": "`2.33`"
+        },
+        {
+          "key": "D",
+          "text": "`0`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`7 % 3` is the remainder, `1`."
+    },
+    {
+      "id": 16,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `2 ** 3` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`6`"
+        },
+        {
+          "key": "B",
+          "text": "`8`"
+        },
+        {
+          "key": "C",
+          "text": "`9`"
+        },
+        {
+          "key": "D",
+          "text": "`5`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`2**3 = 8`."
+    },
+    {
+      "id": 17,
+      "section": "Section 4 — Operators",
+      "prompt": "What does `True and False` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`True`"
+        },
+        {
+          "key": "B",
+          "text": "`False`"
+        },
+        {
+          "key": "C",
+          "text": "`None`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "both sides must be `True` for `and` to be `True`."
+    },
+    {
+      "id": 18,
+      "section": "Section 5 — Getting Input, and f-strings",
+      "prompt": "What type does `input()` always return, no matter what the user types?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`int`"
+        },
+        {
+          "key": "B",
+          "text": "Whatever type matches what they typed, auto-detected"
+        },
+        {
+          "key": "C",
+          "text": "`str`"
+        },
+        {
+          "key": "D",
+          "text": "`bool`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`input()` always returns a `str`."
+    },
+    {
+      "id": 19,
+      "section": "Section 5 — Getting Input, and f-strings",
+      "prompt": "Given `name = \"Sam\"`, what does `f\"Hi {name}!\"` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`Hi {name}!`"
+        },
+        {
+          "key": "B",
+          "text": "`Hi Sam!`"
+        },
+        {
+          "key": "C",
+          "text": "`Hi \"Sam\"!`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "f-strings substitute the variable's value: `Hi Sam!`."
+    },
+    {
+      "id": 20,
+      "section": "Section 5 — Getting Input, and f-strings",
+      "prompt": "Given `x = 4`, what does `f\"{x + 1}\"` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"x + 1\"`"
+        },
+        {
+          "key": "B",
+          "text": "`\"4 + 1\"`"
+        },
+        {
+          "key": "C",
+          "text": "`\"5\"`"
+        },
+        {
+          "key": "D",
+          "text": "Error — you can't do math inside f-strings"
+        }
+      ],
+      "answer": "C",
+      "explanation": "expressions inside `{}` are evaluated: `4 + 1 = 5`, as the string `\"5\"`."
+    },
+    {
+      "id": 21,
+      "section": "Section 6 — Strings, Part 1: The Basics",
+      "prompt": "What is `\"hello\"[0]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`'h'`"
+        },
+        {
+          "key": "B",
+          "text": "`'e'`"
+        },
+        {
+          "key": "C",
+          "text": "`'o'`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "A",
+      "explanation": "index 0 is the first character, `'h'`."
+    },
+    {
+      "id": 22,
+      "section": "Section 6 — Strings, Part 1: The Basics",
+      "prompt": "What is `\"hello\"[-1]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`'h'`"
+        },
+        {
+          "key": "B",
+          "text": "`'o'`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`''`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "index `-1` is the last character, `'o'`."
+    },
+    {
+      "id": 23,
+      "section": "Section 6 — Strings, Part 1: The Basics",
+      "prompt": "What happens if you try `s = \"hi\"; s[0] = \"H\"`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It works — strings are mutable"
+        },
+        {
+          "key": "B",
+          "text": "`TypeError` — strings are immutable"
+        },
+        {
+          "key": "C",
+          "text": "It works, but only for the first character"
+        },
+        {
+          "key": "D",
+          "text": "It silently does nothing"
+        }
+      ],
+      "answer": "B",
+      "explanation": "strings are immutable; item assignment raises `TypeError`."
+    },
+    {
+      "id": 24,
+      "section": "Section 6 — Strings, Part 1: The Basics",
+      "prompt": "What does `len(\"hello\")` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`4`"
+        },
+        {
+          "key": "B",
+          "text": "`5`"
+        },
+        {
+          "key": "C",
+          "text": "`6`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`\"hello\"` has 5 characters."
+    },
+    {
+      "id": 25,
+      "section": "Section 6 — Strings, Part 1: The Basics",
+      "prompt": "What does `\"Hi\" + \" there\"` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"Hi there\"`"
+        },
+        {
+          "key": "B",
+          "text": "Unchanged — strings can't be combined with `+`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`\"Hithere\"`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`+` concatenates strings."
+    },
+    {
+      "id": 26,
+      "section": "Section 7 — Lists",
+      "prompt": "What does `[1,2,3].append(4)` do to the list, and what does `.append()` itself return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "List becomes `[1,2,3,4]`; `.append()` returns `[1,2,3,4]`"
+        },
+        {
+          "key": "B",
+          "text": "List becomes `[1,2,3,4]`; `.append()` returns `None`"
+        },
+        {
+          "key": "C",
+          "text": "List becomes `[4,1,2,3]`; `.append()` returns `None`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`.append()` mutates in place and always returns `None`."
+    },
+    {
+      "id": 27,
+      "section": "Section 7 — Lists",
+      "prompt": "What's the key difference between `.sort()` and `sorted()`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No real difference"
+        },
+        {
+          "key": "B",
+          "text": "`.sort()` returns a new list; `sorted()` modifies in place"
+        },
+        {
+          "key": "C",
+          "text": "`.sort()` modifies the list in place and returns `None`; `sorted()` returns a new list"
+        },
+        {
+          "key": "D",
+          "text": "`sorted()` only works on tuples"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`.sort()` mutates in place and returns `None`; `sorted()` returns a new list."
+    },
+    {
+      "id": 28,
+      "section": "Section 7 — Lists",
+      "prompt": "What does `fruits.pop(0)` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Removes and returns the last element"
+        },
+        {
+          "key": "B",
+          "text": "Removes and returns the element at index 0"
+        },
+        {
+          "key": "C",
+          "text": "Inserts an element at index 0"
+        },
+        {
+          "key": "D",
+          "text": "Error — `pop()` takes no arguments"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`.pop(0)` removes/returns the element at index 0, specifically."
+    },
+    {
+      "id": 29,
+      "section": "Section 7 — Lists",
+      "prompt": "What is `[1,2] + [3,4]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[4,6]`"
+        },
+        {
+          "key": "B",
+          "text": "`[1,2,3,4]`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`[1,2,[3,4]]`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`+` concatenates two lists into one flat list."
+    },
+    {
+      "id": 30,
+      "section": "Section 7 — Lists",
+      "prompt": "What is `[0] * 3`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[0,0,0]`"
+        },
+        {
+          "key": "B",
+          "text": "`0`"
+        },
+        {
+          "key": "C",
+          "text": "`[0]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`[0] * 3` repeats the element 3 times: `[0,0,0]`."
+    },
+    {
+      "id": 31,
+      "section": "Section 7 — Lists",
+      "prompt": "What does `3 in [1,2,3]` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`2` (its index)"
+        },
+        {
+          "key": "B",
+          "text": "`True`"
+        },
+        {
+          "key": "C",
+          "text": "`[3]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`in` on a list is a membership test, returning a `bool`."
+    },
+    {
+      "id": 32,
+      "section": "Section 8 — Tuples",
+      "prompt": "Which of these is a valid one-element tuple?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`(5)`"
+        },
+        {
+          "key": "B",
+          "text": "`(5,)`"
+        },
+        {
+          "key": "C",
+          "text": "`[5]`"
+        },
+        {
+          "key": "D",
+          "text": "`{5}`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the trailing comma is what makes `(5,)` a tuple; `(5)` is just the int 5."
+    },
+    {
+      "id": 33,
+      "section": "Section 8 — Tuples",
+      "prompt": "What happens when you run `t = (1, 2); t[0] = 9`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`t` becomes `(9, 2)`"
+        },
+        {
+          "key": "B",
+          "text": "`TypeError` — tuples don't support item assignment"
+        },
+        {
+          "key": "C",
+          "text": "`t` becomes `[9, 2]`"
+        },
+        {
+          "key": "D",
+          "text": "Nothing happens"
+        }
+      ],
+      "answer": "B",
+      "explanation": "tuples are immutable; item assignment raises `TypeError`."
+    },
+    {
+      "id": 34,
+      "section": "Section 8 — Tuples",
+      "prompt": "Why can a tuple be used as a dictionary key, but a list cannot?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Tuples are faster to create"
+        },
+        {
+          "key": "B",
+          "text": "Tuples are immutable (hashable); lists are mutable (unhashable)"
+        },
+        {
+          "key": "C",
+          "text": "Lists can't hold numbers"
+        },
+        {
+          "key": "D",
+          "text": "There's no real difference"
+        }
+      ],
+      "answer": "B",
+      "explanation": "only immutable (hashable) types can be dict keys; tuples qualify, lists don't."
+    },
+    {
+      "id": 35,
+      "section": "Section 8 — Tuples",
+      "prompt": "What is the result of `a, b = 3, 4; a, b = b, a`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`a=3, b=4` (unchanged)"
+        },
+        {
+          "key": "B",
+          "text": "`a=4, b=3`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`a=(3,4), b=(4,3)`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the right side `b, a` builds `(4, 3)` before any assignment happens, so they swap."
+    },
+    {
+      "id": 36,
+      "section": "Section 9 — Dictionaries",
+      "prompt": "What does `{}` create?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An empty set"
+        },
+        {
+          "key": "B",
+          "text": "An empty dict"
+        },
+        {
+          "key": "C",
+          "text": "An empty list"
+        },
+        {
+          "key": "D",
+          "text": "A syntax error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`{}` is specifically an empty dict (not an empty set)."
+    },
+    {
+      "id": 37,
+      "section": "Section 9 — Dictionaries",
+      "prompt": "Given `d = {\"a\": 1}`, what does `d.get(\"b\", 0)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`KeyError`"
+        },
+        {
+          "key": "B",
+          "text": "`None`"
+        },
+        {
+          "key": "C",
+          "text": "`0`"
+        },
+        {
+          "key": "D",
+          "text": "`\"b\"`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`.get(key, default)` returns the default (`0`) when the key is missing, no error."
+    },
+    {
+      "id": 38,
+      "section": "Section 9 — Dictionaries",
+      "prompt": "Given `d = {\"a\": 1}`, what does plain `d[\"b\"]` (no `.get`) do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Returns `None`"
+        },
+        {
+          "key": "B",
+          "text": "Returns `0`"
+        },
+        {
+          "key": "C",
+          "text": "Raises `KeyError`"
+        },
+        {
+          "key": "D",
+          "text": "Creates `\"b\"` with value `None`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "plain `d[\"b\"]` on a missing key raises `KeyError`."
+    },
+    {
+      "id": 39,
+      "section": "Section 9 — Dictionaries",
+      "prompt": "What does `for k, v in d.items():` give you on each iteration?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Just the key"
+        },
+        {
+          "key": "B",
+          "text": "Just the value"
+        },
+        {
+          "key": "C",
+          "text": "A `(key, value)` pair"
+        },
+        {
+          "key": "D",
+          "text": "The index and the key"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`.items()` yields `(key, value)` tuples."
+    },
+    {
+      "id": 40,
+      "section": "Section 9 — Dictionaries",
+      "prompt": "Since which Python version do dicts reliably preserve insertion order?",
+      "options": [
+        {
+          "key": "A",
+          "text": "2.7"
+        },
+        {
+          "key": "B",
+          "text": "3.0"
+        },
+        {
+          "key": "C",
+          "text": "3.7"
+        },
+        {
+          "key": "D",
+          "text": "They never have, and still don't"
+        }
+      ],
+      "answer": "C",
+      "explanation": "dicts have preserved insertion order since Python 3.7."
+    },
+    {
+      "id": 41,
+      "section": "Section 10 — Sets",
+      "prompt": "What does the set `{1, 2, 3, 2, 1}` actually contain?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`{1, 2, 3, 2, 1}` — all five values"
+        },
+        {
+          "key": "B",
+          "text": "`{1, 2, 3}`"
+        },
+        {
+          "key": "C",
+          "text": "Error — duplicates aren't allowed in a literal"
+        },
+        {
+          "key": "D",
+          "text": "`[1, 2, 3]`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "sets automatically drop duplicates: `{1, 2, 3}`."
+    },
+    {
+      "id": 42,
+      "section": "Section 10 — Sets",
+      "prompt": "How do you create an empty set?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`{}`"
+        },
+        {
+          "key": "B",
+          "text": "`set()`"
+        },
+        {
+          "key": "C",
+          "text": "`[]`"
+        },
+        {
+          "key": "D",
+          "text": "`()`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`set()` is required; `{}` makes a dict instead."
+    },
+    {
+      "id": 43,
+      "section": "Section 10 — Sets",
+      "prompt": "What does `{1,2,3} & {2,3,4}` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`{1,2,3,4}`"
+        },
+        {
+          "key": "B",
+          "text": "`{2,3}`"
+        },
+        {
+          "key": "C",
+          "text": "`{1,4}`"
+        },
+        {
+          "key": "D",
+          "text": "`{}`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`&` is intersection: elements in both sets, `{2, 3}`."
+    },
+    {
+      "id": 44,
+      "section": "Section 10 — Sets",
+      "prompt": "What does `{1,2,3} - {2,3}` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`{1}`"
+        },
+        {
+          "key": "B",
+          "text": "`{2,3}`"
+        },
+        {
+          "key": "C",
+          "text": "`{-1}`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`-` is difference: elements in the left set but not the right, `{1}`."
+    },
+    {
+      "id": 45,
+      "section": "Section 11 — Conditionals: `if` / `elif` / `else`",
+      "prompt": "What determines which block of code runs under an `if` statement in Python?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Curly braces `{}`"
+        },
+        {
+          "key": "B",
+          "text": "Indentation"
+        },
+        {
+          "key": "C",
+          "text": "Parentheses"
+        },
+        {
+          "key": "D",
+          "text": "The order the lines were written"
+        }
+      ],
+      "answer": "B",
+      "explanation": "indentation defines the block, not braces or parentheses."
+    },
+    {
+      "id": 46,
+      "section": "Section 11 — Conditionals: `if` / `elif` / `else`",
+      "prompt": "Given `if x < 5: ... elif x < 10: ... else: ...` with `x = 7`, which block runs?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The `if` block"
+        },
+        {
+          "key": "B",
+          "text": "The `elif` block"
+        },
+        {
+          "key": "C",
+          "text": "The `else` block"
+        },
+        {
+          "key": "D",
+          "text": "All three"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`x=7` fails `x<5` but passes `x<10`, so the `elif` block runs."
+    },
+    {
+      "id": 47,
+      "section": "Section 11 — Conditionals: `if` / `elif` / `else`",
+      "prompt": "Is `else` required after an `if`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes, always"
+        },
+        {
+          "key": "B",
+          "text": "No, it's optional"
+        },
+        {
+          "key": "C",
+          "text": "Only if there's an `elif`"
+        },
+        {
+          "key": "D",
+          "text": "Only inside loops"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`else` is optional; an `if` (or `if`/`elif`) alone is valid."
+    },
+    {
+      "id": 48,
+      "section": "Section 12 — Loops: `while` and `for`",
+      "prompt": "What does looping over `range(5)` produce?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`1,2,3,4,5`"
+        },
+        {
+          "key": "B",
+          "text": "`0,1,2,3,4`"
+        },
+        {
+          "key": "C",
+          "text": "`0,1,2,3,4,5`"
+        },
+        {
+          "key": "D",
+          "text": "`5,4,3,2,1`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`range(5)` is `0,1,2,3,4` — stop is exclusive."
+    },
+    {
+      "id": 49,
+      "section": "Section 12 — Loops: `while` and `for`",
+      "prompt": "What does `range(2, 8, 2)` produce?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`2,4,6`"
+        },
+        {
+          "key": "B",
+          "text": "`2,4,6,8`"
+        },
+        {
+          "key": "C",
+          "text": "`2,3,4,5,6,7`"
+        },
+        {
+          "key": "D",
+          "text": "`2,4,6,7`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "start 2, stop 8 (exclusive), step 2: `2,4,6`."
+    },
+    {
+      "id": 50,
+      "section": "Section 12 — Loops: `while` and `for`",
+      "prompt": "What's the risk if you forget to update a `while` loop's condition variable inside the loop?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`SyntaxError` when you try to run it"
+        },
+        {
+          "key": "B",
+          "text": "It runs once and stops automatically"
+        },
+        {
+          "key": "C",
+          "text": "An infinite loop"
+        },
+        {
+          "key": "D",
+          "text": "Python detects and auto-fixes it"
+        }
+      ],
+      "answer": "C",
+      "explanation": "a condition that never changes true-to-false keeps looping forever."
+    },
+    {
+      "id": 51,
+      "section": "Section 12 — Loops: `while` and `for`",
+      "prompt": "What does `break` do inside a loop?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Skips to the next iteration"
+        },
+        {
+          "key": "B",
+          "text": "Exits the loop entirely"
+        },
+        {
+          "key": "C",
+          "text": "Pauses the loop"
+        },
+        {
+          "key": "D",
+          "text": "Restarts the loop from the top"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`break` exits the enclosing loop immediately."
+    },
+    {
+      "id": 52,
+      "section": "Section 12 — Loops: `while` and `for`",
+      "prompt": "What does `continue` do inside a loop?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Exits the loop entirely"
+        },
+        {
+          "key": "B",
+          "text": "Skips the rest of the current iteration and moves to the next one"
+        },
+        {
+          "key": "C",
+          "text": "Does nothing"
+        },
+        {
+          "key": "D",
+          "text": "Repeats the current iteration"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`continue` skips to the next iteration without exiting the loop."
+    },
+    {
+      "id": 53,
+      "section": "Section 13 — Functions",
+      "prompt": "What does a function return if it has no explicit `return` statement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`0`"
+        },
+        {
+          "key": "B",
+          "text": "`\"\"`"
+        },
+        {
+          "key": "C",
+          "text": "`None`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "C",
+      "explanation": "no `return` means the function implicitly returns `None`."
+    },
+    {
+      "id": 54,
+      "section": "Section 13 — Functions",
+      "prompt": "Given `def greet(name, greeting=\"Hi\"): return f\"{greeting}, {name}\"`, what does `greet(\"Sam\")` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"Hi, Sam\"`"
+        },
+        {
+          "key": "B",
+          "text": "Error — missing argument"
+        },
+        {
+          "key": "C",
+          "text": "`\", Sam\"`"
+        },
+        {
+          "key": "D",
+          "text": "`\"Sam, Hi\"`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`greeting` falls back to its default `\"Hi\"`: `\"Hi, Sam\"`."
+    },
+    {
+      "id": 55,
+      "section": "Section 13 — Functions",
+      "prompt": "What is a \"local\" variable?",
+      "options": [
+        {
+          "key": "A",
+          "text": "One defined outside all functions"
+        },
+        {
+          "key": "B",
+          "text": "One only visible inside the function where it's defined"
+        },
+        {
+          "key": "C",
+          "text": "A variable that's always `0`"
+        },
+        {
+          "key": "D",
+          "text": "Any variable with a name under 4 characters"
+        }
+      ],
+      "answer": "B",
+      "explanation": "a local variable only exists inside the function that defines it."
+    },
+    {
+      "id": 56,
+      "section": "Section 13 — Functions",
+      "prompt": "Given `def f(): x = 5`, what happens when you run `f()` and then `print(x)` outside `f`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prints `5`"
+        },
+        {
+          "key": "B",
+          "text": "Prints `None`"
+        },
+        {
+          "key": "C",
+          "text": "Raises `NameError`"
+        },
+        {
+          "key": "D",
+          "text": "Prints `0`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`x` was local to `f`; it doesn't exist in the outer scope, so `NameError`."
+    },
+    {
+      "id": 57,
+      "section": "Section 13 — Functions",
+      "prompt": "Given `def greet(name, greeting=\"Hello\")`, which call produces `\"Hey, Sam\"`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`greet(\"Sam\", \"Hey\")`"
+        },
+        {
+          "key": "B",
+          "text": "`greet(greeting=\"Hey\")`"
+        },
+        {
+          "key": "C",
+          "text": "`greet(\"Hey\", \"Sam\")`"
+        },
+        {
+          "key": "D",
+          "text": "`greet()`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "positional arguments fill `name` then `greeting` in order: `name=\"Sam\", greeting=\"Hey\"`."
+    },
+    {
+      "id": 58,
+      "section": "Section 14 — Strings, Part 2: Slicing and More Methods",
+      "prompt": "What is `\"hello\"[1:4]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"hell\"`"
+        },
+        {
+          "key": "B",
+          "text": "`\"ell\"`"
+        },
+        {
+          "key": "C",
+          "text": "`\"ello\"`"
+        },
+        {
+          "key": "D",
+          "text": "`\"ell o\"`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "indices 1,2,3 are `'e','l','l'` → `\"ell\"` (index 4 is excluded)."
+    },
+    {
+      "id": 59,
+      "section": "Section 14 — Strings, Part 2: Slicing and More Methods",
+      "prompt": "What is `\"hello\"[::-1]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"hello\"`"
+        },
+        {
+          "key": "B",
+          "text": "`\"olleh\"`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`\"\"`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "step `-1` reverses the string: `\"olleh\"`."
+    },
+    {
+      "id": 60,
+      "section": "Section 14 — Strings, Part 2: Slicing and More Methods",
+      "prompt": "What is `\"hello\"[:3]`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"hel\"`"
+        },
+        {
+          "key": "B",
+          "text": "`\"llo\"`"
+        },
+        {
+          "key": "C",
+          "text": "`\"hello\"`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "A",
+      "explanation": "indices 0,1,2 are `'h','e','l'` → `\"hel\"`."
+    },
+    {
+      "id": 61,
+      "section": "Section 14 — Strings, Part 2: Slicing and More Methods",
+      "prompt": "What is `\"hello\"[10:20]` (an out-of-range slice)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raises `IndexError`"
+        },
+        {
+          "key": "B",
+          "text": "`\"\"`"
+        },
+        {
+          "key": "C",
+          "text": "`\"hello\"`"
+        },
+        {
+          "key": "D",
+          "text": "`None`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "an out-of-range slice never errors; it just returns an empty string."
+    },
+    {
+      "id": 62,
+      "section": "Section 14 — Strings, Part 2: Slicing and More Methods",
+      "prompt": "Which is more efficient for building one long string out of many pieces inside a loop?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`result += piece` repeatedly"
+        },
+        {
+          "key": "B",
+          "text": "`\"\".join(pieces)`"
+        },
+        {
+          "key": "C",
+          "text": "Both are equally efficient"
+        },
+        {
+          "key": "D",
+          "text": "`print()` each piece"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`\"\".join(pieces)` avoids the repeated-copy cost of `+=` in a loop."
+    },
+    {
+      "id": 63,
+      "section": "Section 15 — `enumerate`, `zip`, and `sorted`",
+      "prompt": "What does `enumerate([\"a\",\"b\"])` give you on each iteration?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Just the value"
+        },
+        {
+          "key": "B",
+          "text": "Just the index"
+        },
+        {
+          "key": "C",
+          "text": "`(index, value)` pairs"
+        },
+        {
+          "key": "D",
+          "text": "`(value, index)` pairs"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`enumerate` yields `(index, value)` pairs."
+    },
+    {
+      "id": 64,
+      "section": "Section 15 — `enumerate`, `zip`, and `sorted`",
+      "prompt": "What does `zip([1,2,3], [4,5])` produce when iterated?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`(1,4),(2,5),(3,None)`"
+        },
+        {
+          "key": "B",
+          "text": "`(1,4),(2,5)` — it stops at the shorter list"
+        },
+        {
+          "key": "C",
+          "text": "Error — lists must be the same length"
+        },
+        {
+          "key": "D",
+          "text": "`[1,2,3,4,5]`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`zip` stops as soon as the shortest input is exhausted."
+    },
+    {
+      "id": 65,
+      "section": "Section 15 — `enumerate`, `zip`, and `sorted`",
+      "prompt": "Does `sorted(my_list)` modify `my_list`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes"
+        },
+        {
+          "key": "B",
+          "text": "No — it returns a brand-new list"
+        },
+        {
+          "key": "C",
+          "text": "Only if `reverse=True`"
+        },
+        {
+          "key": "D",
+          "text": "Only for strings"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`sorted()` always returns a new list, leaving the original alone."
+    },
+    {
+      "id": 66,
+      "section": "Section 15 — `enumerate`, `zip`, and `sorted`",
+      "prompt": "Does `my_list.sort()` modify `my_list`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes, in place, and returns `None`"
+        },
+        {
+          "key": "B",
+          "text": "No, it returns a new list"
+        },
+        {
+          "key": "C",
+          "text": "Yes, and it also returns the sorted list"
+        },
+        {
+          "key": "D",
+          "text": "Only sometimes"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`.sort()` mutates in place and returns `None`."
+    },
+    {
+      "id": 67,
+      "section": "Section 15 — `enumerate`, `zip`, and `sorted`",
+      "prompt": "What does `sorted([\"kiwi\", \"fig\", \"banana\"], key=len)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[\"banana\", \"kiwi\", \"fig\"]`"
+        },
+        {
+          "key": "B",
+          "text": "`[\"fig\", \"kiwi\", \"banana\"]`"
+        },
+        {
+          "key": "C",
+          "text": "`[\"fig\", \"banana\", \"kiwi\"]`"
+        },
+        {
+          "key": "D",
+          "text": "Alphabetical order, ignoring the key"
+        }
+      ],
+      "answer": "B",
+      "explanation": "sorted by length ascending: `\"fig\"`(3), `\"kiwi\"`(4), `\"banana\"`(6)."
+    },
+    {
+      "id": 68,
+      "section": "Section 16 — Ternary Expressions and `lambda`",
+      "prompt": "What does `\"adult\" if age >= 18 else \"minor\"` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Always returns `\"adult\"`"
+        },
+        {
+          "key": "B",
+          "text": "Evaluates to one of the two strings depending on the condition"
+        },
+        {
+          "key": "C",
+          "text": "Raises an error without extra parentheses"
+        },
+        {
+          "key": "D",
+          "text": "Only works inside `print()`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "a ternary expression evaluates to one branch or the other based on the condition."
+    },
+    {
+      "id": 69,
+      "section": "Section 16 — Ternary Expressions and `lambda`",
+      "prompt": "What is `lambda x: x * x`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A full function definition using `def`"
+        },
+        {
+          "key": "B",
+          "text": "A small, anonymous, single-expression function"
+        },
+        {
+          "key": "C",
+          "text": "A syntax error"
+        },
+        {
+          "key": "D",
+          "text": "A comment"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`lambda` creates a small anonymous function."
+    },
+    {
+      "id": 70,
+      "section": "Section 16 — Ternary Expressions and `lambda`",
+      "prompt": "Can a `lambda` contain a `for` loop or multiple statements?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes"
+        },
+        {
+          "key": "B",
+          "text": "No — it's limited to a single expression"
+        },
+        {
+          "key": "C",
+          "text": "Only in Python 3.10+"
+        },
+        {
+          "key": "D",
+          "text": "Only inside classes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "a lambda body must be a single expression — no loops, no statements."
+    },
+    {
+      "id": 71,
+      "section": "Section 16 — Ternary Expressions and `lambda`",
+      "prompt": "Given `square = lambda x: x * x`, what is `square(4)`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`4`"
+        },
+        {
+          "key": "B",
+          "text": "`8`"
+        },
+        {
+          "key": "C",
+          "text": "`16`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`4 * 4 = 16`."
+    },
+    {
+      "id": 72,
+      "section": "Section 17 — Comprehensions and Generator Expressions",
+      "prompt": "What does `[x*x for x in range(4)]` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[0,1,4,9]`"
+        },
+        {
+          "key": "B",
+          "text": "`[1,4,9,16]`"
+        },
+        {
+          "key": "C",
+          "text": "`(0,1,4,9)`"
+        },
+        {
+          "key": "D",
+          "text": "`{0,1,4,9}`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "squares of 0,1,2,3: `[0,1,4,9]`."
+    },
+    {
+      "id": 73,
+      "section": "Section 17 — Comprehensions and Generator Expressions",
+      "prompt": "What does `[x for x in range(6) if x % 2 == 0]` evaluate to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[0,2,4]`"
+        },
+        {
+          "key": "B",
+          "text": "`[1,3,5]`"
+        },
+        {
+          "key": "C",
+          "text": "`[0,1,2,3,4,5]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "A",
+      "explanation": "even numbers from 0-5: `[0,2,4]`."
+    },
+    {
+      "id": 74,
+      "section": "Section 17 — Comprehensions and Generator Expressions",
+      "prompt": "What's the main practical difference between `[x for x in range(5)]` and `(x for x in range(5))`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No difference at all"
+        },
+        {
+          "key": "B",
+          "text": "The first builds a whole list in memory now; the second is a lazy generator"
+        },
+        {
+          "key": "C",
+          "text": "The second is faster to build a reusable list from"
+        },
+        {
+          "key": "D",
+          "text": "Only the first can be used inside a `for` loop"
+        }
+      ],
+      "answer": "B",
+      "explanation": "a list comprehension builds the full list immediately; a generator expression produces values lazily, one at a time."
+    },
+    {
+      "id": 75,
+      "section": "Section 17 — Comprehensions and Generator Expressions",
+      "prompt": "What does `{x: x*x for x in range(3)}` create?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A list of tuples"
+        },
+        {
+          "key": "B",
+          "text": "A dict: `{0:0, 1:1, 2:4}`"
+        },
+        {
+          "key": "C",
+          "text": "A set"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`{key: value for ...}` syntax builds a dict."
+    },
+    {
+      "id": 76,
+      "section": "Section 17 — Comprehensions and Generator Expressions",
+      "prompt": "Which is most appropriate for `total = ___(x*x for x in range(1000000))` to avoid building a million-element list in memory?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`list(...)`"
+        },
+        {
+          "key": "B",
+          "text": "`sum(...)`"
+        },
+        {
+          "key": "C",
+          "text": "Both A and B are equally appropriate here"
+        },
+        {
+          "key": "D",
+          "text": "None — generators can't be passed to functions"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`sum(...)` can consume a generator expression directly without ever materializing a full list; `list(...)` would defeat the point by building the whole list anyway."
+    },
+    {
+      "id": 77,
+      "section": "Section 18 — Scope, Closures, and `nonlocal`",
+      "prompt": "Can a nested function read a variable from its enclosing (outer) function without any special keyword?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No, never"
+        },
+        {
+          "key": "B",
+          "text": "Yes — reading just works automatically"
+        },
+        {
+          "key": "C",
+          "text": "Only if declared `global`"
+        },
+        {
+          "key": "D",
+          "text": "Only for numbers"
+        }
+      ],
+      "answer": "B",
+      "explanation": "reading an outer variable from a nested function works automatically, no keyword needed."
+    },
+    {
+      "id": 78,
+      "section": "Section 18 — Scope, Closures, and `nonlocal`",
+      "prompt": "What happens if a nested function tries to **reassign** an outer variable without `nonlocal`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It modifies the outer variable directly"
+        },
+        {
+          "key": "B",
+          "text": "Python creates a new local variable instead, leaving the outer one untouched"
+        },
+        {
+          "key": "C",
+          "text": "`SyntaxError` immediately"
+        },
+        {
+          "key": "D",
+          "text": "The program crashes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "without `nonlocal`, an assignment inside the nested function creates a new local variable instead."
+    },
+    {
+      "id": 79,
+      "section": "Section 18 — Scope, Closures, and `nonlocal`",
+      "prompt": "In the `make_counter()` closure example (an inner `count` starts at 0 and increments via `nonlocal`), what does calling the returned function twice in a row produce?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`1`, then `1` again"
+        },
+        {
+          "key": "B",
+          "text": "`1`, then `2`"
+        },
+        {
+          "key": "C",
+          "text": "`0`, then `1`"
+        },
+        {
+          "key": "D",
+          "text": "Error on the second call"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the closure retains `count` between calls: first call brings it from 0 to 1, second call from 1 to 2."
+    },
+    {
+      "id": 80,
+      "section": "Section 18 — Scope, Closures, and `nonlocal`",
+      "prompt": "Which keyword lets a nested function modify a variable from its enclosing function?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`global`"
+        },
+        {
+          "key": "B",
+          "text": "`nonlocal`"
+        },
+        {
+          "key": "C",
+          "text": "`outer`"
+        },
+        {
+          "key": "D",
+          "text": "`static`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`nonlocal` is specifically for reassigning an enclosing (but non-global) function's variable."
+    },
+    {
+      "id": 81,
+      "section": "Section 19 — Recursion",
+      "prompt": "What are the two essential parts of any correct recursive function?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A loop and a return statement"
+        },
+        {
+          "key": "B",
+          "text": "A base case and a recursive case"
+        },
+        {
+          "key": "C",
+          "text": "A class and a method"
+        },
+        {
+          "key": "D",
+          "text": "An import and a function call"
+        }
+      ],
+      "answer": "B",
+      "explanation": "every correct recursive function needs a base case (to stop) and a recursive case (to progress toward it)."
+    },
+    {
+      "id": 82,
+      "section": "Section 19 — Recursion",
+      "prompt": "What happens if a recursive function never reaches its base case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It silently returns `None`"
+        },
+        {
+          "key": "B",
+          "text": "It raises `RecursionError` once Python's call-depth limit is hit"
+        },
+        {
+          "key": "C",
+          "text": "Python detects this automatically and fixes it"
+        },
+        {
+          "key": "D",
+          "text": "It runs forever with no error at all"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Python enforces a maximum call-stack depth (default 1000) and raises `RecursionError` if it's exceeded."
+    },
+    {
+      "id": 83,
+      "section": "Section 19 — Recursion",
+      "prompt": "Given `factorial(n)`: `if n <= 1: return 1`, else `return n * factorial(n-1)`, what is `factorial(4)`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`4`"
+        },
+        {
+          "key": "B",
+          "text": "`10`"
+        },
+        {
+          "key": "C",
+          "text": "`24`"
+        },
+        {
+          "key": "D",
+          "text": "`120`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`4 * 3 * 2 * 1 = 24`."
+    },
+    {
+      "id": 84,
+      "section": "Section 19 — Recursion",
+      "prompt": "Why is the naive recursive Fibonacci (`fib(n) = fib(n-1) + fib(n-2)`) considered slow for larger `n`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Python can't do recursion efficiently at all"
+        },
+        {
+          "key": "B",
+          "text": "It recomputes the same sub-problems repeatedly"
+        },
+        {
+          "key": "C",
+          "text": "It has no base case"
+        },
+        {
+          "key": "D",
+          "text": "It only works for even numbers"
+        }
+      ],
+      "answer": "B",
+      "explanation": "naive recursive Fibonacci recomputes the same smaller sub-problems exponentially many times."
+    },
+    {
+      "id": 85,
+      "section": "Section 20 — Classes and Objects",
+      "prompt": "What is `__init__` called, and when does it run?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A regular method, called manually"
+        },
+        {
+          "key": "B",
+          "text": "The constructor — runs automatically when a new object is created"
+        },
+        {
+          "key": "C",
+          "text": "A comment marker"
+        },
+        {
+          "key": "D",
+          "text": "A built-in function unrelated to classes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`__init__` is the constructor, called automatically by `ClassName(...)`."
+    },
+    {
+      "id": 86,
+      "section": "Section 20 — Classes and Objects",
+      "prompt": "What does `self` refer to inside a method?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The class itself"
+        },
+        {
+          "key": "B",
+          "text": "The specific instance the method was called on"
+        },
+        {
+          "key": "C",
+          "text": "A global variable"
+        },
+        {
+          "key": "D",
+          "text": "Nothing — it's pure convention and can be omitted"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`self` is the specific instance the method is operating on."
+    },
+    {
+      "id": 87,
+      "section": "Section 20 — Classes and Objects",
+      "prompt": "Given `class Dog: def __init__(self, name): self.name = name`, what does `Dog(\"Rex\").name` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`\"Dog\"`"
+        },
+        {
+          "key": "B",
+          "text": "`\"Rex\"`"
+        },
+        {
+          "key": "C",
+          "text": "`None`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`Dog(\"Rex\")` sets `self.name = \"Rex\"`, so `.name` is `\"Rex\"`."
+    },
+    {
+      "id": 88,
+      "section": "Section 20 — Classes and Objects",
+      "prompt": "What is `my_dog.bark()` really shorthand for, under the hood?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`bark(my_dog)`"
+        },
+        {
+          "key": "B",
+          "text": "`Dog.bark(my_dog)`"
+        },
+        {
+          "key": "C",
+          "text": "`self.bark()`"
+        },
+        {
+          "key": "D",
+          "text": "It's unrelated to the class definition"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Python passes the instance as the first argument automatically: `Dog.bark(my_dog)`."
+    },
+    {
+      "id": 89,
+      "section": "Section 20 — Classes and Objects",
+      "prompt": "In a linked `Node` class where `self.next = next`, what does `first.next.value` access?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The value of `first` itself"
+        },
+        {
+          "key": "B",
+          "text": "The value of the node that `first` points to"
+        },
+        {
+          "key": "C",
+          "text": "A syntax error"
+        },
+        {
+          "key": "D",
+          "text": "The value of the keyword `next`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`first.next` is the other node object, and `.value` reads *its* value."
+    },
+    {
+      "id": 90,
+      "section": "Section 21 — Type Hints",
+      "prompt": "Does Python enforce type hints at runtime?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes, always"
+        },
+        {
+          "key": "B",
+          "text": "No — they're documentation only, never enforced"
+        },
+        {
+          "key": "C",
+          "text": "Only for built-in types"
+        },
+        {
+          "key": "D",
+          "text": "Only in \"strict mode\""
+        }
+      ],
+      "answer": "B",
+      "explanation": "type hints are purely documentation; Python never checks them at runtime."
+    },
+    {
+      "id": 91,
+      "section": "Section 21 — Type Hints",
+      "prompt": "What's required to use `List[int]` as a type hint (capital `L`)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nothing — it works out of the box"
+        },
+        {
+          "key": "B",
+          "text": "`from typing import List`"
+        },
+        {
+          "key": "C",
+          "text": "`import list`"
+        },
+        {
+          "key": "D",
+          "text": "It's a Python 2–only feature"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the capitalized generic types come from the `typing` module and must be imported."
+    },
+    {
+      "id": 92,
+      "section": "Section 21 — Type Hints",
+      "prompt": "Does `list[int]` (lowercase) require any import on Python 3.9+?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yes, the same as `List[int]`"
+        },
+        {
+          "key": "B",
+          "text": "No"
+        },
+        {
+          "key": "C",
+          "text": "Only for nested lists"
+        },
+        {
+          "key": "D",
+          "text": "Only inside classes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "lowercase `list[int]` (PEP 585) needs no import on Python 3.9+."
+    },
+    {
+      "id": 93,
+      "section": "Section 21 — Type Hints",
+      "prompt": "Given `def add(a: int, b: int) -> int: return a + b`, what happens if you call `add(\"x\", \"y\")`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raises `TypeError` immediately because of the hints"
+        },
+        {
+          "key": "B",
+          "text": "Runs anyway — hints don't block the call; it returns `\"xy\"` (string concatenation)"
+        },
+        {
+          "key": "C",
+          "text": "Returns `0`"
+        },
+        {
+          "key": "D",
+          "text": "`SyntaxError`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Python ignores the hints at runtime and just executes `a + b`, which for two strings concatenates them: `\"xy\"`."
+    },
+    {
+      "id": 94,
+      "section": "Section 22 — Modules and Imports",
+      "prompt": "What does `import math` let you do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Automatically adds math functions to every variable"
+        },
+        {
+          "key": "B",
+          "text": "Lets you access math's functions via `math.func_name()`"
+        },
+        {
+          "key": "C",
+          "text": "Deletes the math module"
+        },
+        {
+          "key": "D",
+          "text": "Nothing, unless you also write `from`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`import math` lets you call `math.something()`."
+    },
+    {
+      "id": 95,
+      "section": "Section 22 — Modules and Imports",
+      "prompt": "What's the practical difference between `import math` and `from math import sqrt`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No difference"
+        },
+        {
+          "key": "B",
+          "text": "The second lets you call `sqrt()` directly, without the `math.` prefix"
+        },
+        {
+          "key": "C",
+          "text": "The first is faster"
+        },
+        {
+          "key": "D",
+          "text": "The second imports the entire module under a new name"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`from math import sqrt` brings `sqrt` into your namespace directly, no prefix needed."
+    },
+    {
+      "id": 96,
+      "section": "Section 22 — Modules and Imports",
+      "prompt": "What does `from math import sqrt as square_root` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Imports `sqrt` but makes it locally available under the name `square_root`"
+        },
+        {
+          "key": "B",
+          "text": "Causes an error — imports can't be renamed"
+        },
+        {
+          "key": "C",
+          "text": "Imports the whole `math` module"
+        },
+        {
+          "key": "D",
+          "text": "Deletes `sqrt`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`as` renames the imported name locally; it's valid syntax, not an error."
+    },
+    {
+      "id": 97,
+      "section": "Section 23 — The `collections` Module",
+      "prompt": "What advantage does `deque` have over a plain `list` for queue-style operations?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It can hold more items overall"
+        },
+        {
+          "key": "B",
+          "text": "Appending/removing from either end is O(1), unlike a list's slow front-removal"
+        },
+        {
+          "key": "C",
+          "text": "It automatically keeps itself sorted"
+        },
+        {
+          "key": "D",
+          "text": "It prevents duplicate values"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`deque` supports O(1) operations on both ends; a plain list's front operations are O(n)."
+    },
+    {
+      "id": 98,
+      "section": "Section 23 — The `collections` Module",
+      "prompt": "What does `defaultdict(int)` do when you access a key that doesn't exist yet?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raises `KeyError`, same as a normal dict"
+        },
+        {
+          "key": "B",
+          "text": "Returns `None`"
+        },
+        {
+          "key": "C",
+          "text": "Auto-creates that key with the value `0` (the result of calling `int()`)"
+        },
+        {
+          "key": "D",
+          "text": "Crashes the program"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`defaultdict(int)` calls `int()` (which is `0`) to auto-populate any missing key."
+    },
+    {
+      "id": 99,
+      "section": "Section 23 — The `collections` Module",
+      "prompt": "What does `defaultdict(list)` auto-create for a missing key?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`None`"
+        },
+        {
+          "key": "B",
+          "text": "`0`"
+        },
+        {
+          "key": "C",
+          "text": "An empty list `[]`"
+        },
+        {
+          "key": "D",
+          "text": "`KeyError`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`defaultdict(list)` calls `list()` (which is `[]`) for missing keys."
+    },
+    {
+      "id": 100,
+      "section": "Section 23 — The `collections` Module",
+      "prompt": "What does `Counter([\"a\",\"b\",\"a\"])` produce?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`3`"
+        },
+        {
+          "key": "B",
+          "text": "`[\"a\",\"a\",\"b\"]`"
+        },
+        {
+          "key": "C",
+          "text": "`Counter({'a': 2, 'b': 1})`"
+        },
+        {
+          "key": "D",
+          "text": "`{'a', 'b'}`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`Counter` tallies frequencies: 2 `'a'`s, 1 `'b'`."
+    },
+    {
+      "id": 101,
+      "section": "Section 23 — The `collections` Module",
+      "prompt": "Which `deque` method removes an element from the front (left side)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`pop()`"
+        },
+        {
+          "key": "B",
+          "text": "`popleft()`"
+        },
+        {
+          "key": "C",
+          "text": "`remove()`"
+        },
+        {
+          "key": "D",
+          "text": "`shift()`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`popleft()` removes from the left (front) end."
+    },
+    {
+      "id": 102,
+      "section": "Section 24 — The `heapq` Module",
+      "prompt": "By default, does `heapq` give you a min-heap or a max-heap?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Max-heap"
+        },
+        {
+          "key": "B",
+          "text": "Min-heap"
+        },
+        {
+          "key": "C",
+          "text": "Neither — it's unordered"
+        },
+        {
+          "key": "D",
+          "text": "Depends on the operating system"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`heapq` always implements a min-heap."
+    },
+    {
+      "id": 103,
+      "section": "Section 24 — The `heapq` Module",
+      "prompt": "How do you simulate a max-heap using `heapq`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Pass `reverse=True` to `heappush`"
+        },
+        {
+          "key": "B",
+          "text": "Negate values going in, and negate again coming out"
+        },
+        {
+          "key": "C",
+          "text": "Use `heapq.maxheap()`"
+        },
+        {
+          "key": "D",
+          "text": "It's impossible in Python"
+        }
+      ],
+      "answer": "B",
+      "explanation": "negating values on push and pop simulates a max-heap, since Python has no built-in one."
+    },
+    {
+      "id": 104,
+      "section": "Section 24 — The `heapq` Module",
+      "prompt": "What does `heapq.heappop(heap)` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Adds an item to the heap"
+        },
+        {
+          "key": "B",
+          "text": "Removes and returns the smallest item"
+        },
+        {
+          "key": "C",
+          "text": "Removes and returns the largest item"
+        },
+        {
+          "key": "D",
+          "text": "Returns the heap's size"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`heappop` always removes and returns the current smallest item."
+    },
+    {
+      "id": 105,
+      "section": "Section 24 — The `heapq` Module",
+      "prompt": "What does `heapq.heapify(my_list)` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Fully sorts the list"
+        },
+        {
+          "key": "B",
+          "text": "Converts an existing list into a valid heap, in place, in O(n)"
+        },
+        {
+          "key": "C",
+          "text": "Creates a brand-new empty heap"
+        },
+        {
+          "key": "D",
+          "text": "Removes duplicate values"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`heapify` rearranges an existing list into valid heap order, in place, in O(n)."
+    },
+    {
+      "id": 106,
+      "section": "Section 25 — The `bisect` Module",
+      "prompt": "What does `bisect.bisect_left([1,3,3,5], 3)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`0`"
+        },
+        {
+          "key": "B",
+          "text": "`1`"
+        },
+        {
+          "key": "C",
+          "text": "`2`"
+        },
+        {
+          "key": "D",
+          "text": "`3`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "index 1 is the leftmost position where a `3` could be inserted (just after the `1`, before the first existing `3`)."
+    },
+    {
+      "id": 107,
+      "section": "Section 25 — The `bisect` Module",
+      "prompt": "What does `bisect.bisect_right([1,3,3,5], 3)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`1`"
+        },
+        {
+          "key": "B",
+          "text": "`2`"
+        },
+        {
+          "key": "C",
+          "text": "`3`"
+        },
+        {
+          "key": "D",
+          "text": "`4`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "index 3 is just past both existing `3`s, before the `5`."
+    },
+    {
+      "id": 108,
+      "section": "Section 25 — The `bisect` Module",
+      "prompt": "What does `bisect.insort(lst, x)` do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Removes `x` from `lst`"
+        },
+        {
+          "key": "B",
+          "text": "Inserts `x` into `lst` while keeping it sorted"
+        },
+        {
+          "key": "C",
+          "text": "Re-sorts the entire list from scratch"
+        },
+        {
+          "key": "D",
+          "text": "Returns the index of `x` without inserting it"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`insort` inserts while preserving sort order."
+    },
+    {
+      "id": 109,
+      "section": "Section 26 — Numbers in Binary and Bit Operators",
+      "prompt": "What is `5 & 3` (binary `101 & 011`)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`1`"
+        },
+        {
+          "key": "B",
+          "text": "`7`"
+        },
+        {
+          "key": "C",
+          "text": "`6`"
+        },
+        {
+          "key": "D",
+          "text": "`8`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`101 & 011 = 001 = 1`."
+    },
+    {
+      "id": 110,
+      "section": "Section 26 — Numbers in Binary and Bit Operators",
+      "prompt": "What is `5 | 3`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`1`"
+        },
+        {
+          "key": "B",
+          "text": "`6`"
+        },
+        {
+          "key": "C",
+          "text": "`7`"
+        },
+        {
+          "key": "D",
+          "text": "`8`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "`101 | 011 = 111 = 7`."
+    },
+    {
+      "id": 111,
+      "section": "Section 26 — Numbers in Binary and Bit Operators",
+      "prompt": "What is `5 ^ 5`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`5`"
+        },
+        {
+          "key": "B",
+          "text": "`10`"
+        },
+        {
+          "key": "C",
+          "text": "`0`"
+        },
+        {
+          "key": "D",
+          "text": "`25`"
+        }
+      ],
+      "answer": "C",
+      "explanation": "anything XOR'd with itself is `0`."
+    },
+    {
+      "id": 112,
+      "section": "Section 26 — Numbers in Binary and Bit Operators",
+      "prompt": "What does `x << 1` do to `x`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Divides `x` by 2"
+        },
+        {
+          "key": "B",
+          "text": "Multiplies `x` by 2"
+        },
+        {
+          "key": "C",
+          "text": "Negates `x`"
+        },
+        {
+          "key": "D",
+          "text": "Has no effect"
+        }
+      ],
+      "answer": "B",
+      "explanation": "each left shift by 1 doubles the value."
+    },
+    {
+      "id": 113,
+      "section": "Section 26 — Numbers in Binary and Bit Operators",
+      "prompt": "Why does `~5` equal `-6` in Python, rather than wrapping around the way a fixed-width 32-bit integer would?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Python has a bug"
+        },
+        {
+          "key": "B",
+          "text": "Python integers have no fixed size, so `~x` always equals `-x - 1`"
+        },
+        {
+          "key": "C",
+          "text": "`~` doesn't actually work on integers in Python"
+        },
+        {
+          "key": "D",
+          "text": "It's randomized"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Python ints are arbitrary-precision, so `~x` is always exactly `-x - 1`, with no fixed-width wraparound."
+    },
+    {
+      "id": 114,
+      "section": "Section 27 — The `math` Module",
+      "prompt": "What does `math.ceil(4.3)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`4`"
+        },
+        {
+          "key": "B",
+          "text": "`5`"
+        },
+        {
+          "key": "C",
+          "text": "`4.3`"
+        },
+        {
+          "key": "D",
+          "text": "`4.0`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`ceil` rounds up to the next whole number: `5`."
+    },
+    {
+      "id": 115,
+      "section": "Section 27 — The `math` Module",
+      "prompt": "What does `math.floor(4.7)` return?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`5`"
+        },
+        {
+          "key": "B",
+          "text": "`4`"
+        },
+        {
+          "key": "C",
+          "text": "`4.7`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`floor` rounds down: `4`."
+    },
+    {
+      "id": 116,
+      "section": "Section 27 — The `math` Module",
+      "prompt": "What is `float('-inf')` commonly used for in algorithm code?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To represent an error state"
+        },
+        {
+          "key": "B",
+          "text": "As a starting value for tracking a running maximum, since any real number compares greater than it"
+        },
+        {
+          "key": "C",
+          "text": "To divide by zero safely"
+        },
+        {
+          "key": "D",
+          "text": "To create a `NaN` value"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`float('-inf')` is smaller than any real number, so the first real comparison in a max-tracking loop always replaces it."
+    },
+    {
+      "id": 117,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "What's wrong with `grid = [[0] * 3] * 2`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nothing — this correctly creates two independent rows"
+        },
+        {
+          "key": "B",
+          "text": "It creates two rows that are actually the *same* list object, so mutating one mutates both"
+        },
+        {
+          "key": "C",
+          "text": "It raises a `SyntaxError`"
+        },
+        {
+          "key": "D",
+          "text": "It only creates one row total"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`[x] * 2` repeats the same inner list reference twice, not two independent copies."
+    },
+    {
+      "id": 118,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "What's a correct, general-purpose way to build a 2-row, 3-column grid of independent lists?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[[0] * 3] * 2`"
+        },
+        {
+          "key": "B",
+          "text": "`[[0] * 3 for _ in range(2)]`"
+        },
+        {
+          "key": "C",
+          "text": "`[0] * 3 * 2`"
+        },
+        {
+          "key": "D",
+          "text": "`[[0,0,0],[0,0,0]]` is the *only* way this can be written correctly"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the comprehension `[[0]*3 for _ in range(2)]` builds a fresh inner list on every iteration. (D is a trap: writing the literal out by hand also works, but claiming it's the *only* correct way is false — B is also correct and is the general-purpose approach.)"
+    },
+    {
+      "id": 119,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "What's the bug in `def add_item(item, basket=[]): basket.append(item); return basket`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "There is no bug — this is correct"
+        },
+        {
+          "key": "B",
+          "text": "The default list is created once at definition time and gets shared/mutated across every call"
+        },
+        {
+          "key": "C",
+          "text": "`basket` is required to be a tuple"
+        },
+        {
+          "key": "D",
+          "text": "`.append()` doesn't work with default arguments"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the default `[]` is created once at function-definition time and persists/mutates across every call that uses the default."
+    },
+    {
+      "id": 120,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "What does `-7 // 2` evaluate to, and why does it surprise beginners expecting truncation toward zero?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`-3`, because Python truncates toward zero"
+        },
+        {
+          "key": "B",
+          "text": "`-4`, because `//` floors toward negative infinity, not toward zero"
+        },
+        {
+          "key": "C",
+          "text": "`3` — negative numbers are ignored by `//`"
+        },
+        {
+          "key": "D",
+          "text": "It raises an error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`//` floors toward negative infinity, so `-3.5` becomes `-4`, not `-3`."
+    },
+    {
+      "id": 121,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "Given `a = [1,2,3]; b = a; b.append(4)`, what is `a` now?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[1,2,3]` — unchanged"
+        },
+        {
+          "key": "B",
+          "text": "`[1,2,3,4]` — because `b` and `a` are the same list object"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`[4]`"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`b = a` makes `b` another name for the *same* list; `.append()` on either name affects the one shared list."
+    },
+    {
+      "id": 122,
+      "section": "Section 28 — Gotchas Every Python Beginner Hits",
+      "prompt": "Why does backtracking code often need `results.append(current.copy())` instead of just `results.append(current)`?",
+      "options": [
+        {
+          "key": "A",
+          "text": "`.copy()` is required syntax with no deeper reason"
+        },
+        {
+          "key": "B",
+          "text": "Without it, every entry in `results` would point at the same list object, and later mutations to `current` would change all of them"
+        },
+        {
+          "key": "C",
+          "text": "`.copy()` makes the code run faster"
+        },
+        {
+          "key": "D",
+          "text": "It isn't actually necessary — it's just a style preference"
+        }
+      ],
+      "answer": "B",
+      "explanation": "appending the same reference means every entry in `results` points to one shared, still-mutating list; `.copy()` snapshots its current contents instead."
+    },
+    {
+      "id": 123,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\ndef f(x, lst=[]):\n    lst.append(x)\n    return lst\n\nprint(f(1))\nprint(f(2))\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[1]` then `[2]`"
+        },
+        {
+          "key": "B",
+          "text": "`[1]` then `[1, 2]`"
+        },
+        {
+          "key": "C",
+          "text": "`[1, 2]` then `[1, 2]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the default `lst=[]` is shared across calls: first call gives `[1]`, second call appends to that *same* list, giving `[1, 2]`."
+    },
+    {
+      "id": 124,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\nnums = [5, 3, 8, 1]\nnums.sort(key=lambda x: -x)\nprint(nums)\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[1, 3, 5, 8]`"
+        },
+        {
+          "key": "B",
+          "text": "`[8, 5, 3, 1]`"
+        },
+        {
+          "key": "C",
+          "text": "`[5, 3, 8, 1]`"
+        },
+        {
+          "key": "D",
+          "text": "Error — can't negate inside a lambda"
+        }
+      ],
+      "answer": "B",
+      "explanation": "sorting by the negated value sorts descending: `[8, 5, 3, 1]`."
+    },
+    {
+      "id": 125,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\nd = {}\nfor c in \"aab\":\n    d[c] = d.get(c, 0) + 1\nprint(d)\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`{'a': 2, 'b': 1}`"
+        },
+        {
+          "key": "B",
+          "text": "`{'a': 1, 'b': 1}`"
+        },
+        {
+          "key": "C",
+          "text": "`KeyError`"
+        },
+        {
+          "key": "D",
+          "text": "`{'a': 'aa', 'b': 'b'}`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`.get(c, 0) + 1` counts occurrences: two `'a'`s, one `'b'`."
+    },
+    {
+      "id": 126,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\ndef outer():\n    total = 0\n    def add(n):\n        nonlocal total\n        total += n\n        return total\n    return add\n\nf = outer()\nprint(f(3))\nprint(f(4))\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`3` then `4`"
+        },
+        {
+          "key": "B",
+          "text": "`3` then `7`"
+        },
+        {
+          "key": "C",
+          "text": "`0` then `0`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`nonlocal total` lets `total` persist and accumulate across calls: `0+3=3`, then `3+4=7`."
+    },
+    {
+      "id": 127,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\nnums = [1, 2, 3]\nsquared = [n * n for n in nums if n % 2 != 0]\nprint(squared)\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[1, 4, 9]`"
+        },
+        {
+          "key": "B",
+          "text": "`[1, 9]`"
+        },
+        {
+          "key": "C",
+          "text": "`[4]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "only odd numbers (1, 3) pass the filter, then get squared: `[1, 9]`."
+    },
+    {
+      "id": 128,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\nimport heapq\nh = [5, 1, 3]\nheapq.heapify(h)\nprint(heapq.heappop(h))\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`5`"
+        },
+        {
+          "key": "B",
+          "text": "`1`"
+        },
+        {
+          "key": "C",
+          "text": "`3`"
+        },
+        {
+          "key": "D",
+          "text": "Error — the list must be empty first"
+        }
+      ],
+      "answer": "B",
+      "explanation": "`heapify` arranges `[5,1,3]` into heap order with `1` at the root; `heappop` returns the smallest, `1`."
+    },
+    {
+      "id": 129,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\ns = \"level\"\nprint(s == s[::-1])\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`True`"
+        },
+        {
+          "key": "B",
+          "text": "`False`"
+        },
+        {
+          "key": "C",
+          "text": "Error"
+        },
+        {
+          "key": "D",
+          "text": "`\"level\"`"
+        }
+      ],
+      "answer": "A",
+      "explanation": "`\"level\"` reversed is still `\"level\"` — it's a palindrome, so `True`."
+    },
+    {
+      "id": 130,
+      "section": "Mixed Review — Predict the Output",
+      "prompt": "```python\na = [[0] * 2 for _ in range(2)]\na[0][0] = 9\nprint(a)\n```",
+      "options": [
+        {
+          "key": "A",
+          "text": "`[[9, 0], [9, 0]]`"
+        },
+        {
+          "key": "B",
+          "text": "`[[9, 0], [0, 0]]`"
+        },
+        {
+          "key": "C",
+          "text": "`[[0, 0], [0, 0]]`"
+        },
+        {
+          "key": "D",
+          "text": "Error"
+        }
+      ],
+      "answer": "B",
+      "explanation": "the comprehension creates two independent inner lists, so mutating `a[0][0]` leaves `a[1]` untouched."
+    }
+  ]
+}

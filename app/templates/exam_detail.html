@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.title }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('views.dashboard') }}">← All exams</a></p>
+<div class="card">
+  <h1>{{ exam.title }}</h1>
+  <p>{{ exam.description }}</p>
+  <ul class="facts">
+    <li><strong>{{ exam.questions|length }}</strong> questions</li>
+    <li><strong>{{ exam.duration_minutes }}</strong> minutes (about {{ (exam.duration_minutes * 60 / exam.questions|length)|round|int }}s per question)</li>
+    <li>Pass at <strong>{{ exam.pass_percent }}%</strong></li>
+    <li><strong>{{ exam.sections|length }}</strong> sections</li>
+  </ul>
+  <h3>Rules</h3>
+  <ul>
+    <li>The timer starts as soon as you begin and keeps running if you close the tab.</li>
+    <li>Answers save automatically. You can move between questions and change answers until time is up.</li>
+    <li>When time runs out, the exam submits itself with the answers you have saved.</li>
+    <li>Unanswered questions count as wrong. There is no negative marking, so answer everything.</li>
+  </ul>
+  {% if active %}
+    <a class="btn primary" href="{{ url_for('views.take', attempt_id=active.id) }}">Resume your attempt</a>
+  {% else %}
+    <form method="post" action="{{ url_for('views.start_exam', exam_id=exam.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn primary" type="submit">{{ "Retake exam" if history else "Start exam" }}</button>
+    </form>
+  {% endif %}
+</div>
+
+<h2 class="section-title">Your attempts</h2>
+{% with show_exam = false %}{% include "_history_table.html" %}{% endwith %}
+{% endblock %}

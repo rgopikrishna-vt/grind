@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.title }} (in progress){% endblock %}
+{% block body_class %}taking{% endblock %}
+{% block main_class %}exam-layout{% endblock %}
+{% block content %}
+<div class="exam-bar">
+  <div class="exam-title">{{ exam.title }}</div>
+  <div class="progress-text"><span id="answered-count">{{ answers|length }}</span>/{{ exam.questions|length }} answered</div>
+  <div id="timer" class="timer" aria-live="off" data-remaining="{{ remaining }}">--:--</div>
+  <span id="save-state" class="save-state muted small"></span>
+  <button class="btn primary" type="button" id="open-submit">Submit</button>
+</div>
+
+<div class="exam-body">
+  <aside class="navigator" aria-label="Question navigator">
+    {% for name, qids in exam.sections.items() %}
+      <div class="nav-section" title="{{ name }}">{{ name|md_inline }}</div>
+      <div class="nav-grid">
+      {% for qid in qids %}
+        <button type="button" class="nav-q {{ 'answered' if qid in answers }}" data-index="{{ loop.index0 }}" data-qid="{{ qid }}">{{ qid }}</button>
+      {% endfor %}
+      </div>
+    {% endfor %}
+    <p class="legend small muted"><span class="dot answered"></span> answered <span class="dot flagged"></span> flagged</p>
+  </aside>
+
+  <section class="question-pane">
+    {% for q in exam.questions %}
+    <article class="question" data-index="{{ loop.index0 }}" data-qid="{{ q.id }}" {% if not loop.first %}hidden{% endif %}>
+      <div class="q-meta muted small">{{ q.section|md_inline }}</div>
+      <h2 class="q-num">Question {{ q.id }} <span class="muted small">of {{ exam.questions|length }}</span></h2>
+      <div class="q-prompt">{{ q.prompt|md }}</div>
+      <div class="options" role="radiogroup">
+        {% for o in q.options %}
+        <label class="option">
+          <input type="radio" name="q{{ q.id }}" value="{{ o.key }}" {% if answers.get(q.id) == o.key %}checked{% endif %}>
+          <span class="opt-key">{{ o.key }}</span>
+          <span class="opt-text">{{ o.text|md_inline }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      <div class="q-actions">
+        <button type="button" class="btn" data-act="prev" {% if loop.first %}disabled{% endif %}>← Previous</button>
+        <button type="button" class="btn ghost" data-act="clear">Clear answer</button>
+        <button type="button" class="btn ghost" data-act="flag">Flag</button>
+        <button type="button" class="btn" data-act="next" {% if loop.last %}disabled{% endif %}>Next →</button>
+      </div>
+    </article>
+    {% endfor %}
+    <p class="small muted kbd-hint">Keys: A–D pick an answer, ← → move, F flags.</p>
+  </section>
+</div>
+
+<dialog id="submit-dialog">
+  <form method="post" action="{{ url_for('views.submit', attempt_id=attempt.id) }}" id="submit-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="reason" id="submit-reason" value="manual">
+    <h2>Submit exam?</h2>
+    <p id="submit-summary"></p>
+    <div class="q-actions">
+      <button type="button" class="btn" id="cancel-submit">Keep working</button>
+      <button type="submit" class="btn primary">Submit now</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.EXAM = {
+    attemptId: {{ attempt.id }},
+    total: {{ exam.questions|length }},
+    saveUrl: "{{ url_for('views.save_answer', attempt_id=attempt.id) }}"
+  };
+</script>
+<script src="{{ url_for('static', filename='take.js') }}"></script>
+{% endblock %}

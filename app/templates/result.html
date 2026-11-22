@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.title }} result{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('views.exam_detail', exam_id=exam.id) }}">← {{ exam.title }}</a></p>
+
+<div class="card score-card">
+  <div class="score-big {{ 'pass' if summary.passed else 'fail' }}">{{ summary.percent }}%</div>
+  <div>
+    <h1>{{ attempt.score }} of {{ attempt.total }} correct</h1>
+    <p class="muted">
+      {{ "Passed" if summary.passed else "Not passed" }} (pass mark {{ exam.pass_percent }}%) ·
+      {{ wrong }} wrong · {{ unanswered }} unanswered · time used {{ summary.duration }}
+      {% if attempt.status == "timed_out" %}· <strong>time ran out</strong>{% endif %}
+    </p>
+    <p class="muted small">Taken <time data-local datetime="{{ attempt.started_at }}">{{ attempt.started_at }}</time></p>
+    <form method="post" action="{{ url_for('views.start_exam', exam_id=exam.id) }}" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn primary" type="submit">Retake exam</button>
+    </form>
+    <a class="btn" href="{{ url_for('views.results') }}">All my results</a>
+  </div>
+</div>
+
+<h2 class="section-title">By section</h2>
+<div class="table-wrap">
+<table class="sections">
+  <thead><tr><th>Section</th><th>Score</th><th class="bar-col"></th></tr></thead>
+  <tbody>
+  {% for s in sections %}
+    {% set pct = (100 * s.correct / s.total)|round|int %}
+    <tr>
+      <td>{{ s.name|md_inline }}</td>
+      <td>{{ s.correct }}/{{ s.total }}</td>
+      <td class="bar-col"><div class="bar"><span style="width: {{ pct }}%" class="{{ 'good' if pct >= exam.pass_percent else 'weak' }}"></span></div></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2 class="section-title">Review your answers</h2>
+<div class="filters" role="group" aria-label="Filter questions">
+  <button class="chip active" data-filter="all">All ({{ attempt.total }})</button>
+  <button class="chip" data-filter="wrong">Wrong ({{ wrong }})</button>
+  <button class="chip" data-filter="unanswered">Unanswered ({{ unanswered }})</button>
+  <button class="chip" data-filter="correct">Correct ({{ attempt.score }})</button>
+</div>
+
+{% for q in exam.questions %}
+  {% set mine = answers.get(q.id) %}
+  {% set state = 'unanswered' if not mine else ('correct' if mine == q.answer else 'wrong') %}
+  <article class="card review {{ state }}" data-state="{{ state }}">
+    <div class="q-meta muted small">{{ q.section|md_inline }}</div>
+    <h3>Question {{ q.id }} <span class="pill {{ 'pass' if state == 'correct' else 'fail' }}">{{ {'correct': 'Correct', 'wrong': 'Wrong', 'unanswered': 'Not answered'}[state] }}</span></h3>
+    <div class="q-prompt">{{ q.prompt|md }}</div>
+    <ul class="review-options">
+      {% for o in q.options %}
+      <li class="{{ 'is-answer' if o.key == q.answer }} {{ 'is-mine' if o.key == mine }}">
+        <span class="opt-key">{{ o.key }}</span>
+        <span class="opt-text">{{ o.text|md_inline }}</span>
+        {% if o.key == q.answer %}<span class="tag good">Correct answer</span>{% endif %}
+        {% if o.key == mine and mine != q.answer %}<span class="tag bad">Your answer</span>{% elif o.key == mine %}<span class="tag good">Your answer</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="explanation"><strong>Explanation:</strong> {{ q.explanation|md_inline }}</div>
+  </article>
+{% endfor %}
+{% endblock %}
+{% block scripts %}
+<script>
+  document.querySelectorAll('.chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      document.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('active', c === chip); });
+      var f = chip.dataset.filter;
+      document.querySelectorAll('.review').forEach(function (r) { r.hidden = f !== 'all' && r.dataset.state !== f; });
+    });
+  });
+</script>
+{% endblock %}
