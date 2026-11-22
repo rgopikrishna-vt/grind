@@ -14,6 +14,7 @@ _spec = importlib.util.spec_from_file_location("grind_runner", os.path.join(ROOT
 runner = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(runner)
 EXERCISES = load_exercises(os.path.join(ROOT, "practice"))
+N = len(EXERCISES)
 
 from test_app import app, client, csrf, register  # noqa: E402,F401  (shared fixtures)
 
@@ -100,7 +101,7 @@ def test_practice_pages_require_login(client):
 def test_practice_progress_flow(client):
     register(client)
     html = client.get("/practice").get_data(as_text=True)
-    assert "0 of 35 solved" in html and "Two Sum" in html
+    assert f"0 of {N} solved" in html and "Two Sum" in html
     page = client.get("/practice/two-sum").get_data(as_text=True)
     assert "def two_sum(nums, target):" in page
     assert "seen = {}" not in page, "the solution must not be sent before it is asked for"
@@ -115,8 +116,8 @@ def test_practice_progress_flow(client):
     assert r["solved"] and r["first_solve"] and r["attempts"] == 2
     r = _json_post(client, "/practice/two-sum/submit", token, {"code": "attempt 3", "passed": False}).get_json()
     assert r["solved"] and not r["first_solve"], "solved stays solved"
-    assert "1 of 35 solved" in client.get("/practice").get_data(as_text=True)
-    assert "1</strong> of 35 exercises solved" in client.get("/").get_data(as_text=True)
+    assert f"1 of {N} solved" in client.get("/practice").get_data(as_text=True)
+    assert f"1</strong> of {N} exercises solved" in client.get("/").get_data(as_text=True)
 
     sol = _json_post(client, "/practice/two-sum/solution", token, {}).get_json()
     assert "seen = {}" in sol["solution"] and "<p>" in sol["explanation_html"]
@@ -137,7 +138,7 @@ def test_progress_is_per_user(client, app):
     _json_post(client, "/practice/fizzbuzz/submit", token, {"code": "alice code", "passed": True})
     other = app.test_client()
     register(other, "bob")
-    assert "0 of 35 solved" in other.get("/practice").get_data(as_text=True)
+    assert f"0 of {N} solved" in other.get("/practice").get_data(as_text=True)
     assert "alice code" not in other.get("/practice/fizzbuzz").get_data(as_text=True)
 
 
