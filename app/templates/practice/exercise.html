@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}{{ ex.title }} · Practice{% endblock %}
+{% block head %}{% include "practice/_assets.html" %}{% endblock %}
+{% block main_class %}container wide{% endblock %}
+{% block content %}
+<div class="nb-head">
+  <div class="crumbs small"><a href="{{ url_for('practice.index') }}">Practice</a> <span class="muted">/ {{ ex.topic }}</span></div>
+  <div class="nb-title-row">
+    <h1>{{ ex.number }}. {{ ex.title }}</h1>
+    <span class="pill diff-{{ ex.difficulty }}">{{ ex.difficulty }}</span>
+    <span class="pill pass" id="solved-badge" {% if not (progress and progress.solved_at) %}hidden{% endif %}>✓ Solved</span>
+    <span class="kernel-status small" id="kernel-status" data-status="loading">Starting Python…</span>
+  </div>
+</div>
+
+<div class="notebook">
+  <section class="cell md-cell">
+    <div class="cell-label">Task</div>
+    <div class="cell-body prose">{{ ex.prompt|md }}</div>
+  </section>
+
+  {% if ex.examples %}
+  <section class="cell">
+    <div class="cell-label">Examples</div>
+    <div class="cell-body">
+      <pre class="code"><code>{{ ex.examples.rstrip() }}</code></pre>
+      <p class="small muted">Submit runs these {{ ex.example_count }} example{{ "s" if ex.example_count != 1 }} plus {{ ex.hidden_count }} hidden test{{ "s" if ex.hidden_count != 1 }}.</p>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="cell code-cell main-cell">
+    <div class="cell-label">Your code <span class="save-state small muted" id="save-state"></span></div>
+    <div class="cell-body">
+      <textarea id="code" aria-label="Your code">{{ code }}</textarea>
+      <div class="cell-toolbar">
+        <button class="btn" type="button" id="run" title="Ctrl/Cmd+Enter">▶ Run</button>
+        <button class="btn primary" type="button" id="submit" title="Run the tests">Submit</button>
+        <button class="btn ghost" type="button" id="stop" hidden>■ Stop</button>
+        <span class="spacer"></span>
+        <button class="btn ghost" type="button" id="reset">Reset to starter</button>
+      </div>
+      <pre class="output" id="output" hidden></pre>
+      <div class="test-results" id="results" hidden></div>
+    </div>
+  </section>
+
+  <section class="cell code-cell">
+    <div class="cell-label">Try it <span class="small muted">shares variables with your code above (run it first)</span></div>
+    <div class="cell-body">
+      <textarea id="scratch" aria-label="Scratch cell">{{ ex.try_snippet }}</textarea>
+      <div class="cell-toolbar">
+        <button class="btn" type="button" id="run-scratch" title="Ctrl/Cmd+Enter">▶ Run</button>
+      </div>
+      <pre class="output" id="scratch-output" hidden></pre>
+    </div>
+  </section>
+
+  <section class="cell help-cell">
+    <div class="cell-label">Stuck?</div>
+    <div class="cell-body">
+      {% if ex.hints %}
+      <ol class="hints" id="hints">
+        {% for h in ex.hints %}<li {% if not progress or loop.index > progress.hints_used %}hidden{% endif %}>{{ h|md_inline }}</li>{% endfor %}
+      </ol>
+      {% endif %}
+      <div class="cell-toolbar">
+        {% if ex.hints %}<button class="btn" type="button" id="hint-btn" data-total="{{ ex.hints|length }}" data-used="{{ progress.hints_used if progress else 0 }}"></button>{% endif %}
+        <button class="btn ghost" type="button" id="solution-btn">Show solution</button>
+        <span class="small muted" id="solution-confirm" hidden>Try a hint first? You learn more by struggling a bit. <button class="linkish accent" type="button" id="solution-yes">Show it anyway</button></span>
+      </div>
+      <div id="solution" hidden>
+        <div class="cell-label">Reference solution</div>
+        <textarea id="solution-code" aria-label="Reference solution"></textarea>
+        <div class="explanation prose" id="solution-explanation" hidden></div>
+        <div class="cell-toolbar"><button class="btn ghost" type="button" id="use-solution">Copy into my code</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="ex-nav">
+    {% if prev_id %}<a class="btn" href="{{ url_for('practice.exercise', exercise_id=prev_id) }}">← Previous</a>{% else %}<span></span>{% endif %}
+    <a class="btn ghost" href="{{ url_for('practice.index') }}">All exercises</a>
+    {% if next_id %}<a class="btn" id="next-link" href="{{ url_for('practice.exercise', exercise_id=next_id) }}">Next →</a>{% else %}<span></span>{% endif %}
+  </nav>
+  <p class="small muted kbd-hint">Keys: Ctrl/Cmd+Enter runs the cell, Tab indents, Ctrl/Cmd+/ toggles a comment.</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.EXERCISE = {
+    id: {{ ex.id|tojson }},
+    starter: {{ ex.starter|tojson }},
+    examples: {{ ex.examples|tojson }},
+    tests: {{ ex.tests|tojson }},
+    saveUrl: "{{ url_for('practice.save', exercise_id=ex.id) }}",
+    submitUrl: "{{ url_for('practice.submit', exercise_id=ex.id) }}",
+    solutionUrl: "{{ url_for('practice.solution', exercise_id=ex.id) }}",
+    nextUrl: {{ (url_for('practice.exercise', exercise_id=next_id) if next_id else none)|tojson }},
+    solutionViewed: {{ (progress.solution_viewed if progress else 0)|tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='practice/exercise.js') }}"></script>
+{% endblock %}

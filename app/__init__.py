@@ -4,7 +4,7 @@ import secrets
 from dotenv import load_dotenv
 from flask import Flask
 
-from . import db, exams, auth, views, render
+from . import db, exams, auth, views, render, practice, practice_views
 
 
 def _load_env_files():
@@ -29,6 +29,9 @@ def create_app(test_config=None):
         DATABASE_URL_UNPOOLED=os.environ.get("DATABASE_URL_UNPOOLED", ""),
         DATABASE=os.environ.get("INTERVIEWIQ_DB", os.path.join(app.instance_path, "interviewiq.sqlite3")),
         EXAMS_DIR=os.environ.get("INTERVIEWIQ_EXAMS", os.path.join(os.path.dirname(app.root_path), "exams")),
+        PRACTICE_DIR=os.environ.get("GRIND_PRACTICE", os.path.join(os.path.dirname(app.root_path), "practice")),
+        # Pyodide (Python for the browser) runs practice code client-side. Must end with "/".
+        PYODIDE_URL=os.environ.get("PYODIDE_URL", "https://cdn.jsdelivr.net/npm/pyodide@0.29.5/"),
         # Seconds of slack after the deadline for the final auto-submit request to arrive.
         SUBMIT_GRACE_SECONDS=15,
         SESSION_COOKIE_HTTPONLY=True,
@@ -40,9 +43,11 @@ def create_app(test_config=None):
 
     db.init_app(app)
     exams.init_app(app)
+    practice.init_app(app)
     render.init_app(app)
     app.register_blueprint(auth.bp)
     app.register_blueprint(views.bp)
+    app.register_blueprint(practice_views.bp)
     return app
 
 

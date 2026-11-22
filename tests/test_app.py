@@ -21,7 +21,7 @@ def app(request, tmp_path):
 
         url = os.environ["TEST_DATABASE_URL"]
         with psycopg.connect(url, autocommit=True) as conn:
-            conn.execute("DROP TABLE IF EXISTS answers, attempts, users")
+            conn.execute("DROP TABLE IF EXISTS answers, attempts, practice_progress, notebooks, users")
         config["DATABASE_URL"] = url
     return create_app(config)
 

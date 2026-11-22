@@ -33,6 +33,26 @@ CREATE TABLE IF NOT EXISTS answers (
     choice TEXT NOT NULL,
     PRIMARY KEY (attempt_id, question_id)
 );
+CREATE TABLE IF NOT EXISTS practice_progress (
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    exercise_id TEXT NOT NULL,
+    code TEXT,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    hints_used INTEGER NOT NULL DEFAULT 0,
+    solution_viewed INTEGER NOT NULL DEFAULT 0,
+    solved_at TEXT,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, exercise_id)
+);
+CREATE TABLE IF NOT EXISTS notebooks (
+    id {pk},
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    title TEXT NOT NULL,
+    cells TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_notebooks_user ON notebooks (user_id, updated_at);
 """
 SQLITE_PK = "INTEGER PRIMARY KEY AUTOINCREMENT"
 POSTGRES_PK = "INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY"

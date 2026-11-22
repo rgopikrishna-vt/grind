@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Exams{% endblock %}
 {% block content %}
+<article class="card practice-banner">
+  <div>
+    <h2>Practice</h2>
+    <p class="muted">Coding exercises you run and auto-check in the browser, plus a free Python scratchpad.</p>
+    {% if practice.total %}
+    <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * practice.solved / practice.total)|round|int }}%"></span></div>
+    <p class="small"><strong>{{ practice.solved }}</strong> of {{ practice.total }} exercises solved</p>
+    {% endif %}
+  </div>
+  <div class="banner-actions">
+    <a class="btn primary" href="{{ url_for('practice.index') }}">{{ "Continue practicing" if practice.solved else "Start practicing" }}</a>
+    <a class="btn" href="{{ url_for('practice.notebooks') }}">Open scratchpad</a>
+  </div>
+</article>
+
 <h1>Available exams</h1>
 <div class="grid">
 {% for c in cards %}

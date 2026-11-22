@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Scratchpad{% endblock %}
+{% block content %}
+<div class="practice-head">
+  <div>
+    <h1>Scratchpad</h1>
+    <p class="muted">Free-form Python notebooks. Mix code and notes, run cells in any order, and come back to them later.</p>
+  </div>
+  <form method="post" action="{{ url_for('practice.new_notebook') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="btn primary" type="submit">+ New notebook</button>
+  </form>
+</div>
+{% if notebooks %}
+<ul class="ex-list nb-list">
+  {% for nb in notebooks %}
+  <li class="ex-row">
+    <a class="ex-title" href="{{ url_for('practice.notebook', nb_id=nb.id) }}">{{ nb.title }}</a>
+    <span class="muted small">Edited <time data-local datetime="{{ nb.updated_at }}">{{ nb.updated_at }}</time></span>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="card center">
+  <p class="muted">No notebooks yet. Create one to start writing Python.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{# Editor and Python runtime for practice pages. CodeMirror is optional: without it the pages fall back to a plain textarea. #}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+<script>
+  window.GRIND_PRACTICE = {
+    workerURL: "{{ url_for('static', filename='practice/worker.js') }}",
+    runnerURL: "{{ url_for('static', filename='practice/runner.py') }}",
+    pyodideURL: {{ config.PYODIDE_URL|tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='practice/kernel.js') }}"></script>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ nb.title }} · Scratchpad{% endblock %}
+{% block head %}
+{% include "practice/_assets.html" %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+{% endblock %}
+{% block main_class %}container wide{% endblock %}
+{% block content %}
+<div class="nb-head">
+  <div class="crumbs small"><a href="{{ url_for('practice.notebooks') }}">Scratchpad</a></div>
+  <div class="nb-title-row">
+    <input class="nb-title-input" id="nb-title" value="{{ nb.title }}" maxlength="120" aria-label="Notebook title">
+    <span class="save-state small muted" id="save-state"></span>
+    <span class="kernel-status small" id="kernel-status" data-status="loading">Starting Python…</span>
+  </div>
+  <div class="cell-toolbar nb-toolbar">
+    <button class="btn" type="button" id="run-all">▶▶ Run all</button>
+    <button class="btn ghost" type="button" id="stop" hidden>■ Stop</button>
+    <button class="btn ghost" type="button" id="restart" title="Clear all variables">↻ Restart</button>
+    <button class="btn ghost" type="button" id="clear-outputs">Clear outputs</button>
+    <span class="spacer"></span>
+    <form method="post" action="{{ url_for('practice.delete_notebook', nb_id=nb.id) }}" id="delete-form" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn ghost danger" type="button" id="delete">Delete notebook</button>
+      <span class="small" id="delete-confirm" hidden>Delete for good? <button class="linkish danger" type="submit">Yes, delete</button> · <button class="linkish" type="button" id="delete-no">Cancel</button></span>
+    </form>
+  </div>
+</div>
+
+<div class="notebook" id="cells"></div>
+<div class="add-cell-row">
+  <button class="btn ghost" type="button" data-add="code">+ Code</button>
+  <button class="btn ghost" type="button" data-add="markdown">+ Text</button>
+</div>
+<p class="small muted kbd-hint">Keys: Shift+Enter runs a cell and moves on, Ctrl/Cmd+Enter runs it in place, Tab indents, Ctrl/Cmd+/ toggles a comment. Code that calls <code>input()</code> reads from the cell's stdin box.</p>
+
+<template id="cell-tpl">
+  <section class="cell nb-cell">
+    <div class="cell-gutter"><span class="exec-count"></span></div>
+    <div class="cell-main">
+      <div class="cell-body">
+        <div class="md-view prose" hidden></div>
+        <div class="editor-slot"></div>
+        <div class="stdin-box" hidden>
+          <label class="small">stdin (one line per <code>input()</code> call)<textarea class="stdin" rows="2" spellcheck="false"></textarea></label>
+        </div>
+        <pre class="output" hidden></pre>
+      </div>
+      <div class="cell-actions">
+        <button type="button" class="icon-btn" data-act="run" title="Run (Shift+Enter)">▶</button>
+        <button type="button" class="icon-btn" data-act="stdin" title="Toggle stdin box">⌨</button>
+        <button type="button" class="icon-btn" data-act="type" title="Switch code / text"></button>
+        <button type="button" class="icon-btn" data-act="up" title="Move up">↑</button>
+        <button type="button" class="icon-btn" data-act="down" title="Move down">↓</button>
+        <button type="button" class="icon-btn" data-act="add" title="Add a code cell below">＋</button>
+        <button type="button" class="icon-btn" data-act="delete" title="Delete cell">✕</button>
+      </div>
+    </div>
+  </section>
+</template>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.NOTEBOOK = {
+    id: {{ nb.id }},
+    cells: {{ cells|tojson }},
+    saveUrl: "{{ url_for('practice.save_notebook', nb_id=nb.id) }}"
+  };
+</script>
+<script src="{{ url_for('static', filename='practice/notebook.js') }}"></script>
+{% endblock %}
