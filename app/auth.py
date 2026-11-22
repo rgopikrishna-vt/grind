@@ -5,7 +5,7 @@ import secrets
 from flask import Blueprint, abort, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .db import get_db, now, to_iso
+from .db import IntegrityError, get_db, now, to_iso
 
 bp = Blueprint("auth", __name__)
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_.-]{3,32}$")
@@ -63,15 +63,15 @@ def register():
         else:
             db = get_db()
             try:
-                cur = db.execute(
-                    "INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?)",
+                user_id = db.execute(
+                    "INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?) RETURNING id",
                     (username, generate_password_hash(password), to_iso(now())),
-                )
+                ).fetchone()["id"]
                 db.commit()
-            except Exception:  # unique constraint
+            except IntegrityError:
                 error = "That username is taken."
             else:
-                _start_session(cur.lastrowid)
+                _start_session(user_id)
                 flash(f"Welcome, {username}! Your account is ready.", "ok")
                 return redirect(url_for("views.dashboard"))
         flash(error, "error")
@@ -85,7 +85,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
-        user = get_db().execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        user = get_db().execute("SELECT * FROM users WHERE lower(username) = lower(?)", (username,)).fetchone()
         if user and check_password_hash(user["password_hash"], password):
             _start_session(user["id"])
             nxt = request.args.get("next", "")

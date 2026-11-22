@@ -1,3 +1,7 @@
+"""Database access for SQLite (local default) or Postgres (e.g. Neon) when DATABASE_URL is set.
+
+Queries are written once with `?` placeholders; the Postgres wrapper translates them to `%s`.
+"""
 import sqlite3
 from datetime import datetime, timezone
 
@@ -5,23 +9,24 @@ from flask import current_app, g
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+    id {pk},
+    username TEXT NOT NULL,
     password_hash TEXT NOT NULL,
     created_at TEXT NOT NULL
 );
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users (lower(username));
 CREATE TABLE IF NOT EXISTS attempts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id {pk},
     user_id INTEGER NOT NULL REFERENCES users(id),
     exam_id TEXT NOT NULL,
     started_at TEXT NOT NULL,
     deadline TEXT NOT NULL,
     submitted_at TEXT,
-    status TEXT NOT NULL DEFAULT 'in_progress',  -- in_progress | submitted | timed_out
+    status TEXT NOT NULL DEFAULT 'in_progress',
     score INTEGER,
     total INTEGER
 );
-CREATE INDEX IF NOT EXISTS idx_attempts_user ON attempts(user_id, exam_id);
+CREATE INDEX IF NOT EXISTS idx_attempts_user ON attempts (user_id, exam_id);
 CREATE TABLE IF NOT EXISTS answers (
     attempt_id INTEGER NOT NULL REFERENCES attempts(id) ON DELETE CASCADE,
     question_id INTEGER NOT NULL,
@@ -29,6 +34,12 @@ CREATE TABLE IF NOT EXISTS answers (
     PRIMARY KEY (attempt_id, question_id)
 );
 """
+SQLITE_PK = "INTEGER PRIMARY KEY AUTOINCREMENT"
+POSTGRES_PK = "INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY"
+
+
+class IntegrityError(Exception):
+    """Raised for unique-constraint violations on either backend."""
 
 
 def now():
@@ -43,11 +54,73 @@ def from_iso(s):
     return datetime.fromisoformat(s) if s else None
 
 
+def is_postgres(url):
+    return bool(url) and url.startswith(("postgres://", "postgresql://"))
+
+
+class _PostgresDB:
+    """Minimal sqlite3-like facade over a psycopg connection."""
+
+    def __init__(self, url):
+        import psycopg
+        from psycopg.rows import dict_row
+
+        self._errors = psycopg.errors
+        self.conn = psycopg.connect(url, row_factory=dict_row, connect_timeout=15)
+
+    def execute(self, sql, params=()):
+        try:
+            return self.conn.execute(sql.replace("?", "%s"), params)
+        except self._errors.UniqueViolation as e:
+            self.conn.rollback()
+            raise IntegrityError(str(e)) from e
+        except Exception:
+            self.conn.rollback()
+            raise
+
+    def executescript(self, sql):
+        self.conn.execute(sql)
+        self.conn.commit()
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
+
+class _SqliteDB:
+    def __init__(self, path):
+        self.conn = sqlite3.connect(path)
+        self.conn.row_factory = sqlite3.Row
+        self.conn.execute("PRAGMA foreign_keys = ON")
+
+    def execute(self, sql, params=()):
+        try:
+            return self.conn.execute(sql, params)
+        except sqlite3.IntegrityError as e:
+            raise IntegrityError(str(e)) from e
+
+    def executescript(self, sql):
+        self.conn.executescript(sql)
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
+
+def _connect(app):
+    url = app.config.get("DATABASE_URL")
+    if is_postgres(url):
+        return _PostgresDB(url)
+    return _SqliteDB(app.config["DATABASE"])
+
+
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect(current_app.config["DATABASE"])
-        g.db.row_factory = sqlite3.Row
-        g.db.execute("PRAGMA foreign_keys = ON")
+        g.db = _connect(current_app)
     return g.db
 
 
@@ -59,6 +132,9 @@ def close_db(_=None):
 
 def init_app(app):
     app.teardown_appcontext(close_db)
-    with app.app_context():
-        get_db().executescript(SCHEMA)
-        close_db()
+    db = _connect(app)
+    try:
+        pk = POSTGRES_PK if is_postgres(app.config.get("DATABASE_URL")) else SQLITE_PK
+        db.executescript(SCHEMA.format(pk=pk))
+    finally:
+        db.close()

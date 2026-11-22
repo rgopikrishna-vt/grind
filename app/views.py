@@ -92,7 +92,7 @@ def dashboard():
     cards = []
     for exam in all_exams().values():
         stats = db.execute(
-            "SELECT COUNT(*) n, MAX(score * 1.0 / total) best FROM attempts "
+            "SELECT COUNT(*) AS n, MAX(score * 1.0 / total) AS best FROM attempts "
             "WHERE user_id = ? AND exam_id = ? AND status != 'in_progress' AND total > 0",
             (g.user["id"], exam["id"]),
         ).fetchone()
@@ -103,7 +103,7 @@ def dashboard():
         cards.append({
             "exam": exam,
             "attempts": stats["n"],
-            "best": round(100 * stats["best"]) if stats["best"] is not None else None,
+            "best": round(100 * float(stats["best"])) if stats["best"] is not None else None,
             "active_id": active["id"] if active else None,
         })
     recent = db.execute(
@@ -138,12 +138,12 @@ def start_exam(exam_id):
     if active:  # one live attempt per exam; resume it rather than resetting the clock
         return redirect(url_for("views.take", attempt_id=active["id"]))
     start = now()
-    cur = db.execute(
-        "INSERT INTO attempts (user_id, exam_id, started_at, deadline, total) VALUES (?, ?, ?, ?, ?)",
+    attempt_id = db.execute(
+        "INSERT INTO attempts (user_id, exam_id, started_at, deadline, total) VALUES (?, ?, ?, ?, ?) RETURNING id",
         (g.user["id"], exam_id, to_iso(start), to_iso(start + timedelta(minutes=exam["duration_minutes"])), len(exam["questions"])),
-    )
+    ).fetchone()["id"]
     db.commit()
-    return redirect(url_for("views.take", attempt_id=cur.lastrowid))
+    return redirect(url_for("views.take", attempt_id=attempt_id))
 
 
 @bp.route("/attempts/<int:attempt_id>")

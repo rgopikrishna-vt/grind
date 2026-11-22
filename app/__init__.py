@@ -10,6 +10,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     os.makedirs(app.instance_path, exist_ok=True)
     app.config.update(
+        # Set DATABASE_URL to a postgres:// URL (e.g. Neon) to use Postgres; otherwise SQLite is used.
+        DATABASE_URL=os.environ.get("DATABASE_URL", ""),
         DATABASE=os.environ.get("INTERVIEWIQ_DB", os.path.join(app.instance_path, "interviewiq.sqlite3")),
         EXAMS_DIR=os.environ.get("INTERVIEWIQ_EXAMS", os.path.join(os.path.dirname(app.root_path), "exams")),
         # Seconds of slack after the deadline for the final auto-submit request to arrive.

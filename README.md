@@ -2,7 +2,7 @@
 
 A lightweight web app for taking timed multiple-choice exams. Users create an account, pick an exam, take it against the clock, and get a score with a full review of their answers and the explanations. They can retake any exam and see every past result.
 
-Built with Flask and SQLite. No JavaScript framework and no build step.
+Built with Flask. It stores data in Postgres (for example [Neon](https://neon.tech)) when `DATABASE_URL` is set, and in a local SQLite file otherwise. No JavaScript framework and no build step.
 
 ## Features
 
@@ -22,9 +22,9 @@ pip install -r requirements.txt
 flask --app wsgi run --debug
 ```
 
-Open http://127.0.0.1:5000 and create an account. Data is stored in `instance/interviewiq.sqlite3`.
+Open http://127.0.0.1:5000 and create an account. Without `DATABASE_URL`, data is stored in `instance/interviewiq.sqlite3`. To use Postgres locally, export `DATABASE_URL=postgresql://...` first. Tables are created automatically on startup.
 
-Run the tests with `pip install -r requirements-dev.txt && pytest`.
+Run the tests with `pip install -r requirements-dev.txt && pytest`. They run on SQLite; set `TEST_DATABASE_URL` to a throwaway Postgres database to run them on Postgres as well (its tables are dropped).
 
 ## Adding an exam
 
@@ -65,16 +65,18 @@ The converter checks that every question has an answer in the key and that the a
 
 Python Basics has 130 questions in 60 minutes, about 28 seconds per question. That is deliberately tight. Change `duration_minutes` in the JSON to adjust it.
 
-## Deploy to Render
+## Deploy to Render with Neon
 
-The repo includes a `render.yaml` Blueprint. In Render choose **New → Blueprint**, pick this repo, and apply. It creates a Starter web service running gunicorn, generates a `SECRET_KEY`, and mounts a 1 GB persistent disk at `/var/data` for the SQLite database.
+1. In [Neon](https://console.neon.tech), create a project and copy its connection string (it looks like `postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`). The pooled connection string works too.
+2. In Render choose **New → Blueprint**, pick this repo, and apply. When asked for `DATABASE_URL`, paste the Neon connection string.
 
-The persistent disk is what keeps users and results across deploys. Render's free instances have no persistent disk, so on the free plan the database would be wiped on every deploy or restart.
+The Blueprint creates a free web service running gunicorn and generates a `SECRET_KEY`. The app creates its tables in Neon on first start. Because all data lives in Neon, Render's free instance is fine: redeploys and restarts lose nothing. Free Render services sleep after 15 minutes idle, so the first request after a quiet spell takes a few extra seconds.
 
 ## Configuration
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `SECRET_KEY` | random, saved in `instance/secret_key` | Signs session cookies |
-| `INTERVIEWIQ_DB` | `instance/interviewiq.sqlite3` | SQLite database path |
+| `DATABASE_URL` | unset | Postgres connection string (e.g. Neon). When set, Postgres is used instead of SQLite |
+| `INTERVIEWIQ_DB` | `instance/interviewiq.sqlite3` | SQLite database path, used when `DATABASE_URL` is unset |
 | `INTERVIEWIQ_EXAMS` | `exams/` | Folder of exam JSON files |

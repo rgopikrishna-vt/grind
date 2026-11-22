@@ -1,3 +1,4 @@
+import os
 import re
 from datetime import timedelta
 
@@ -7,9 +8,22 @@ from app import create_app
 from app.db import from_iso, get_db, to_iso
 
 
-@pytest.fixture
-def app(tmp_path):
-    return create_app({"TESTING": True, "SECRET_KEY": "test", "DATABASE": str(tmp_path / "t.sqlite3")})
+# Tests always run on SQLite. Set TEST_DATABASE_URL=postgresql://... to also run them on Postgres
+# (the tables in that database are dropped before each test).
+BACKENDS = ["sqlite"] + (["postgres"] if os.environ.get("TEST_DATABASE_URL") else [])
+
+
+@pytest.fixture(params=BACKENDS)
+def app(request, tmp_path):
+    config = {"TESTING": True, "SECRET_KEY": "test", "DATABASE": str(tmp_path / "t.sqlite3")}
+    if request.param == "postgres":
+        import psycopg
+
+        url = os.environ["TEST_DATABASE_URL"]
+        with psycopg.connect(url, autocommit=True) as conn:
+            conn.execute("DROP TABLE IF EXISTS answers, attempts, users")
+        config["DATABASE_URL"] = url
+    return create_app(config)
 
 
 @pytest.fixture
