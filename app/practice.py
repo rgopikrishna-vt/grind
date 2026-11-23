@@ -1,14 +1,16 @@
-"""Practice exercises are Markdown files in the practice/ folder, one exercise per file.
-Drop a new file in to add an exercise. Files are listed in filename order, so prefix them
-with a number (e.g. 36-my-exercise.md).
+"""Practice exercises are Markdown files in a topic's practice/ folder (topics/<topic>/practice/),
+one exercise per file. Drop a new file in to add an exercise. Files are listed in filename order,
+so prefix them with a number (e.g. 36-my-exercise.md). Exercise ids must be unique across all
+topics, because saved progress is keyed by the id.
 
 File format:
 
     ---
     id: two-sum                 # URL-safe and unique
     title: Two Sum
-    topic: Dictionaries         # exercises are grouped by topic
+    topic: Dictionaries         # group heading on the topic's Practice page
     difficulty: easy            # easy | medium | hard
+    lesson: 9                   # optional: number of the lesson section it practices
     ---
 
     ## Prompt
@@ -110,6 +112,7 @@ def parse_exercise(text, name="exercise"):
         "title": meta["title"],
         "topic": meta["topic"],
         "difficulty": meta["difficulty"],
+        "lesson": int(meta["lesson"]) if meta.get("lesson", "").isdigit() else None,
         "prompt": sections["prompt"].strip(),
         "starter": code("starter"),
         "examples": examples,
@@ -157,10 +160,6 @@ def load_exercises(directory):
     return found
 
 
-def init_app(app):
-    app.extensions["practice"] = load_exercises(app.config["PRACTICE_DIR"])
-
-
 def all_exercises():
     return current_app.extensions["practice"]
 
@@ -169,8 +168,9 @@ def get_exercise(exercise_id):
     return all_exercises().get(exercise_id)
 
 
-def topics():
+def group(exercises):
+    """Exercises grouped by their `topic` front matter, in file order."""
     grouped = OrderedDict()
-    for ex in all_exercises().values():
+    for ex in exercises:
         grouped.setdefault(ex["topic"], []).append(ex)
     return grouped

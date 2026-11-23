@@ -4,8 +4,8 @@ from flask import Blueprint, abort, current_app, flash, g, jsonify, redirect, re
 
 from .auth import login_required
 from .db import from_iso, get_db, now, to_iso
-from .exams import all_exams, get_exam
-from .practice_views import practice_summary
+from .exams import get_exam
+from .topics import get_topic
 
 bp = Blueprint("views", __name__)
 
@@ -53,7 +53,7 @@ def _close_if_expired(attempt):
     return attempt
 
 
-def _close_expired_for_user():
+def close_expired_for_user():
     rows = get_db().execute("SELECT * FROM attempts WHERE user_id = ? AND status = 'in_progress'", (g.user["id"],)).fetchall()
     for a in rows:
         _close_if_expired(a)
@@ -88,50 +88,34 @@ def _fmt_duration(seconds):
 @bp.route("/")
 @login_required
 def dashboard():
-    _close_expired_for_user()
-    db = get_db()
-    cards = []
-    for exam in all_exams().values():
-        stats = db.execute(
-            "SELECT COUNT(*) AS n, MAX(score * 1.0 / total) AS best FROM attempts "
-            "WHERE user_id = ? AND exam_id = ? AND status != 'in_progress' AND total > 0",
-            (g.user["id"], exam["id"]),
-        ).fetchone()
-        active = db.execute(
-            "SELECT id FROM attempts WHERE user_id = ? AND exam_id = ? AND status = 'in_progress'",
-            (g.user["id"], exam["id"]),
-        ).fetchone()
-        cards.append({
-            "exam": exam,
-            "attempts": stats["n"],
-            "best": round(100 * float(stats["best"])) if stats["best"] is not None else None,
-            "active_id": active["id"] if active else None,
-        })
-    recent = db.execute(
+    from .topic_views import home_cards
+    close_expired_for_user()
+    recent = get_db().execute(
         "SELECT * FROM attempts WHERE user_id = ? AND status != 'in_progress' ORDER BY id DESC LIMIT 5",
         (g.user["id"],),
     ).fetchall()
-    return render_template("dashboard.html", cards=cards, recent=_summaries(recent), practice=practice_summary(g.user["id"]))
+    return render_template("dashboard.html", cards=home_cards(g.user["id"]), recent=_summaries(recent))
 
 
 @bp.route("/exams/<exam_id>")
 @login_required
 def exam_detail(exam_id):
     exam = get_exam(exam_id) or abort(404)
-    _close_expired_for_user()
+    close_expired_for_user()
     rows = get_db().execute(
         "SELECT * FROM attempts WHERE user_id = ? AND exam_id = ? ORDER BY id DESC", (g.user["id"], exam_id)
     ).fetchall()
     active = next((r for r in rows if r["status"] == "in_progress"), None)
     done = [r for r in rows if r["status"] != "in_progress"]
-    return render_template("exam_detail.html", exam=exam, active=active, history=_summaries(done))
+    topic = get_topic(exam["topic_id"])
+    return render_template("exam_detail.html", exam=exam, topic=topic, tab="quiz", active=active, history=_summaries(done))
 
 
 @bp.route("/exams/<exam_id>/start", methods=("POST",))
 @login_required
 def start_exam(exam_id):
     exam = get_exam(exam_id) or abort(404)
-    _close_expired_for_user()
+    close_expired_for_user()
     db = get_db()
     active = db.execute(
         "SELECT id FROM attempts WHERE user_id = ? AND exam_id = ? AND status = 'in_progress'", (g.user["id"], exam_id)
@@ -225,7 +209,7 @@ def result(attempt_id):
 @bp.route("/results")
 @login_required
 def results():
-    _close_expired_for_user()
+    close_expired_for_user()
     rows = get_db().execute(
         "SELECT * FROM attempts WHERE user_id = ? AND status != 'in_progress' ORDER BY id DESC", (g.user["id"],)
     ).fetchall()

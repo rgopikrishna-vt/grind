@@ -1,44 +1,50 @@
 {% extends "base.html" %}
-{% block title %}Exams{% endblock %}
+{% block title %}Topics{% endblock %}
 {% block content %}
-<article class="card practice-banner">
+<div class="practice-head">
   <div>
-    <h2>Practice</h2>
-    <p class="muted">Coding exercises you run and auto-check in the browser, plus a free Python scratchpad.</p>
-    {% if practice.total %}
-    <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * practice.solved / practice.total)|round|int }}%"></span></div>
-    <p class="small"><strong>{{ practice.solved }}</strong> of {{ practice.total }} exercises solved</p>
-    {% endif %}
+    <h1>Topics</h1>
+    <p class="muted">Each topic has a lesson to read, practice exercises you run in the browser, and a timed quiz to test yourself.</p>
   </div>
-  <div class="banner-actions">
-    <a class="btn primary" href="{{ url_for('practice.index') }}">{{ "Continue practicing" if practice.solved else "Start practicing" }}</a>
-    <a class="btn" href="{{ url_for('practice.notebooks') }}">Open scratchpad</a>
-  </div>
-</article>
+  <div class="banner-actions"><a class="btn" href="{{ url_for('practice.notebooks') }}">Open scratchpad</a></div>
+</div>
 
-<h1>Available exams</h1>
-<div class="grid">
-{% for c in cards %}
-  <article class="card exam-card">
-    <h2><a href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ c.exam.title }}</a></h2>
-    <p class="muted">{{ c.exam.description }}</p>
-    <ul class="facts">
-      <li><strong>{{ c.exam.questions|length }}</strong> questions</li>
-      <li><strong>{{ c.exam.duration_minutes }}</strong> min</li>
-      <li>Pass at <strong>{{ c.exam.pass_percent }}%</strong></li>
+<div class="topic-grid">
+{% for p in cards %}
+  {% set t = p.topic %}
+  <article class="card topic-card">
+    <h2><a href="{{ url_for('topics.overview', topic_id=t.id) }}">{{ t.title }}</a></h2>
+    {% if t.description %}<p class="muted">{{ t.description }}</p>{% endif %}
+    <ul class="part-list">
+      {% if p.lesson %}
+      <li>
+        <a class="part-name" href="{{ url_for('topics.lesson', topic_id=t.id) }}">Lesson</a>
+        <div class="bar" aria-hidden="true"><span class="good" style="width: {{ (100 * p.lesson.read / p.lesson.total)|round|int }}%"></span></div>
+        <span class="small muted">{{ p.lesson.read }}/{{ p.lesson.total }} sections read</span>
+      </li>
+      {% endif %}
+      {% if p.practice %}
+      <li>
+        <a class="part-name" href="{{ url_for('topics.practice', topic_id=t.id) }}">Practice</a>
+        <div class="bar" aria-hidden="true"><span class="good" style="width: {{ (100 * p.practice.solved / p.practice.total)|round|int }}%"></span></div>
+        <span class="small muted">{{ p.practice.solved }}/{{ p.practice.total }} exercises solved</span>
+      </li>
+      {% endif %}
+      {% for c in p.exams %}
+      <li>
+        <a class="part-name" href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ "Quiz" if p.exams|length == 1 else c.exam.title }}</a>
+        <div class="bar" aria-hidden="true"><span class="{{ 'good' if c.best is not none and c.best >= c.exam.pass_percent else 'weak' }}" style="width: {{ c.best or 0 }}%"></span></div>
+        <span class="small muted">{% if c.active_id %}In progress{% elif c.attempts %}Best {{ c.best }}% · {{ c.attempts }} attempt{{ "s" if c.attempts != 1 }}{% else %}Not taken yet{% endif %}</span>
+      </li>
+      {% endfor %}
     </ul>
-    <p class="small">{% if c.attempts %}Attempts: {{ c.attempts }} · Best: <strong>{{ c.best }}%</strong>{% else %}Not attempted yet{% endif %}</p>
-    {% if c.active_id %}
-      <a class="btn primary" href="{{ url_for('views.take', attempt_id=c.active_id) }}">Resume attempt</a>
-    {% else %}
-      <a class="btn primary" href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ "Retake" if c.attempts else "Start" }}</a>
-    {% endif %}
+    <a class="btn primary" href="{{ url_for('topics.overview', topic_id=t.id) }}">Open topic</a>
   </article>
 {% else %}
-  <p class="muted">No exams are installed. Add a JSON file to the <code>exams/</code> folder.</p>
+  <p class="muted">No topics are installed. Add a folder to <code>topics/</code> (see the README).</p>
 {% endfor %}
 </div>
 
-<h2 class="section-title">Recent results <a class="small" href="{{ url_for('views.results') }}">See all</a></h2>
+<h2 class="section-title">Recent quiz results <a class="small" href="{{ url_for('views.results') }}">See all</a></h2>
 {% with history = recent, show_exam = true %}{% include "_history_table.html" %}{% endwith %}
 {% endblock %}

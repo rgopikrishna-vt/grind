@@ -1,4 +1,5 @@
-"""Exams are plain JSON files in the exams/ folder. Drop a new file in to add an exam.
+"""Exams are plain JSON files in a topic's exams/ folder (topics/<topic>/exams/). Drop a new file in
+to add an exam. Exam ids must be unique across all topics, because attempts are stored by id.
 
 File format:
 {
@@ -55,10 +56,6 @@ def _validate(exam, name):
         ids.add(q["id"])
         if q["answer"] not in {o["key"] for o in q["options"]}:
             raise ValueError(f"{name}: question {q['id']} answer is not an option")
-
-
-def init_app(app):
-    app.extensions["exams"] = load_exams(app.config["EXAMS_DIR"])
 
 
 def all_exams():

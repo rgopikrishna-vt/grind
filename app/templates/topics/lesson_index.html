@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Lesson · {{ topic.title }}{% endblock %}
+{% block content %}
+{% include "topics/_header.html" %}
+<div class="card lesson-intro">
+  <h2>{{ lesson.title }}</h2>
+  <div class="lesson prose">{{ lesson.intro_html }}</div>
+  <div class="progress-line"><strong>{{ done|length }} of {{ lesson.sections|length }} sections read</strong></div>
+  <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * (done|length) / lesson.sections|length)|round|int }}%"></span></div>
+  <div class="banner-actions">
+  {% if next_section %}
+    <a class="btn primary" href="{{ url_for('topics.section', topic_id=topic.id, section_id=next_section.id) }}">{{ "Continue" if done else "Start" }}: {{ next_section.title }}</a>
+  {% else %}
+    <span class="pill pass">✓ Lesson complete</span>
+    {% if topic.exams %}<a class="btn primary" href="{{ url_for('topics.quiz', topic_id=topic.id) }}">Take the quiz</a>{% endif %}
+  {% endif %}
+  </div>
+</div>
+<h2 class="section-title">Sections</h2>
+{% with sec = none %}{% include "topics/_lesson_toc.html" %}{% endwith %}
+{% endblock %}

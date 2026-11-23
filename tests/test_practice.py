@@ -13,8 +13,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _spec = importlib.util.spec_from_file_location("grind_runner", os.path.join(ROOT, "app", "static", "practice", "runner.py"))
 runner = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(runner)
-EXERCISES = load_exercises(os.path.join(ROOT, "practice"))
+EXERCISES = load_exercises(os.path.join(ROOT, "topics", "python-basics", "practice"))
 N = len(EXERCISES)
+PRACTICE = "/topics/python-basics/practice"
 
 from test_app import app, client, csrf, register  # noqa: E402,F401  (shared fixtures)
 
@@ -100,12 +101,13 @@ def test_practice_pages_require_login(client):
 
 def test_practice_progress_flow(client):
     register(client)
-    html = client.get("/practice").get_data(as_text=True)
+    assert client.get("/practice").headers["Location"].endswith("/topics/python-basics/practice")
+    html = client.get(PRACTICE).get_data(as_text=True)
     assert f"0 of {N} solved" in html and "Two Sum" in html
     page = client.get("/practice/two-sum").get_data(as_text=True)
     assert "def two_sum(nums, target):" in page
     assert "seen = {}" not in page, "the solution must not be sent before it is asked for"
-    token = csrf(client, "/practice")
+    token = csrf(client, PRACTICE)
 
     assert _json_post(client, "/practice/two-sum/save", token, {"code": "my draft", "hints_used": 2}).get_json()["ok"]
     assert "my draft" in client.get("/practice/two-sum").get_data(as_text=True)
@@ -116,8 +118,8 @@ def test_practice_progress_flow(client):
     assert r["solved"] and r["first_solve"] and r["attempts"] == 2
     r = _json_post(client, "/practice/two-sum/submit", token, {"code": "attempt 3", "passed": False}).get_json()
     assert r["solved"] and not r["first_solve"], "solved stays solved"
-    assert f"1 of {N} solved" in client.get("/practice").get_data(as_text=True)
-    assert f"1</strong> of {N} exercises solved" in client.get("/").get_data(as_text=True)
+    assert f"1 of {N} solved" in client.get(PRACTICE).get_data(as_text=True)
+    assert f"1/{N} exercises solved" in client.get("/").get_data(as_text=True)
 
     sol = _json_post(client, "/practice/two-sum/solution", token, {}).get_json()
     assert "seen = {}" in sol["solution"] and "<p>" in sol["explanation_html"]
@@ -125,7 +127,7 @@ def test_practice_progress_flow(client):
 
 def test_practice_rejects_bad_input(client):
     register(client)
-    token = csrf(client, "/practice")
+    token = csrf(client, PRACTICE)
     assert client.get("/practice/nope").status_code == 404
     assert _json_post(client, "/practice/two-sum/save", token, {"code": 5}).status_code == 400
     assert _json_post(client, "/practice/two-sum/save", token, {"code": "x" * 200_000}).status_code == 400
@@ -134,11 +136,11 @@ def test_practice_rejects_bad_input(client):
 
 def test_progress_is_per_user(client, app):
     register(client, "alice")
-    token = csrf(client, "/practice")
+    token = csrf(client, PRACTICE)
     _json_post(client, "/practice/fizzbuzz/submit", token, {"code": "alice code", "passed": True})
     other = app.test_client()
     register(other, "bob")
-    assert f"0 of {N} solved" in other.get("/practice").get_data(as_text=True)
+    assert f"0 of {N} solved" in other.get(PRACTICE).get_data(as_text=True)
     assert "alice code" not in other.get("/practice/fizzbuzz").get_data(as_text=True)
 
 

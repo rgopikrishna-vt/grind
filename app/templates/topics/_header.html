@@ -1,0 +1,11 @@
+{# Topic title and the Overview / Lesson / Practice / Quiz tabs. Needs `topic` and `tab`. #}
+<header class="topic-head">
+  <div class="crumbs small"><a href="{{ url_for('views.dashboard') }}">Topics</a> <span class="muted">/</span></div>
+  <h1><a href="{{ url_for('topics.overview', topic_id=topic.id) }}">{{ topic.title }}</a></h1>
+  <nav class="tabs" aria-label="{{ topic.title }} sections">
+    <a href="{{ url_for('topics.overview', topic_id=topic.id) }}" {% if tab == 'overview' %}class="active" aria-current="page"{% endif %}>Overview</a>
+    {% if topic.lesson %}<a href="{{ url_for('topics.lesson', topic_id=topic.id) }}" {% if tab == 'lesson' %}class="active" aria-current="page"{% endif %}>Lesson</a>{% endif %}
+    {% if topic.exercises %}<a href="{{ url_for('topics.practice', topic_id=topic.id) }}" {% if tab == 'practice' %}class="active" aria-current="page"{% endif %}>Practice</a>{% endif %}
+    {% if topic.exams %}<a href="{{ url_for('topics.quiz', topic_id=topic.id) }}" {% if tab == 'quiz' %}class="active" aria-current="page"{% endif %}>{{ "Quiz" if topic.exams|length == 1 else "Quizzes" }}</a>{% endif %}
+  </nav>
+</header>

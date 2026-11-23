@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ sec.title }} · {{ topic.title }}{% endblock %}
+{% block main_class %}container wide{% endblock %}
+{% block content %}
+{% include "topics/_header.html" %}
+<div class="lesson-layout">
+  <aside class="lesson-side">
+    <details class="toc-box" open>
+      <summary><strong>{{ lesson.title }}</strong> <span class="small muted">{{ done|length }}/{{ lesson.sections|length }} read</span></summary>
+      {% include "topics/_lesson_toc.html" %}
+    </details>
+  </aside>
+
+  <article class="lesson-main">
+    <div class="card lesson-card">
+      <p class="small muted section-count">Section {{ sec.index + 1 }} of {{ lesson.sections|length }}{% if sec.id in done %} · <span class="read-tag">✓ Read</span>{% endif %}</p>
+      <h2 class="lesson-h">{{ sec.heading|md_inline }}</h2>
+      <div class="lesson prose">{{ sec.html }}</div>
+    </div>
+
+    {% if sec.exercises %}
+    <section class="card practice-these">
+      <h3>Practice this</h3>
+      <ul class="ex-list">
+      {% for ex in sec.exercises %}
+        {% set st = states.get(ex.id, 'new') %}
+        <li class="ex-row {{ st }}">
+          <span class="ex-state" title="{{ {'solved': 'Solved', 'started': 'Started', 'new': 'Not started'}[st] }}">{{ {'solved': '✓', 'started': '•', 'new': ''}[st] }}</span>
+          <a class="ex-title" href="{{ url_for('practice.exercise', exercise_id=ex.id) }}">{{ ex.title }}</a>
+          <span class="pill diff-{{ ex.difficulty }}">{{ ex.difficulty }}</span>
+        </li>
+      {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <nav class="lesson-nav">
+      {% if prev_sec %}<a class="btn" href="{{ url_for('topics.section', topic_id=topic.id, section_id=prev_sec.id) }}" title="{{ prev_sec.title }}">← Previous</a>{% else %}<span></span>{% endif %}
+      <div class="banner-actions">
+        {% if sec.id in done %}
+          <form method="post" action="{{ url_for('topics.mark_read', topic_id=topic.id, section_id=sec.id) }}" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="read" value="0">
+            <button class="btn ghost" type="submit">Mark as unread</button>
+          </form>
+          {% if next_sec %}<a class="btn primary" href="{{ url_for('topics.section', topic_id=topic.id, section_id=next_sec.id) }}">Next: {{ next_sec.title }} →</a>
+          {% elif topic.exams %}<a class="btn primary" href="{{ url_for('topics.quiz', topic_id=topic.id) }}">Take the quiz →</a>{% endif %}
+        {% else %}
+          <form method="post" action="{{ url_for('topics.mark_read', topic_id=topic.id, section_id=sec.id) }}" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="next" value="1">
+            <button class="btn primary" type="submit">{{ "Mark as read and continue →" if next_sec else "Mark as read and finish" }}</button>
+          </form>
+        {% endif %}
+      </div>
+    </nav>
+  </article>
+</div>
+<form id="try-form" method="post" action="{{ url_for('practice.new_notebook') }}" hidden>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="source" value="{{ topic.title }}: {{ sec.title }}">
+  <input type="hidden" name="code">
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var form = document.getElementById("try-form");
+  document.querySelectorAll(".try-code").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      form.elements.code.value = btn.closest(".lesson-code").querySelector("pre").textContent;
+      form.submit();
+    });
+  });
+  // On narrow screens, start with the section list folded so the reading comes first.
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    var box = document.querySelector(".toc-box");
+    if (box) box.open = false;
+  }
+})();
+</script>
+{% endblock %}

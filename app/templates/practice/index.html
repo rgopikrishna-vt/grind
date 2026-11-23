@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Practice{% endblock %}
+{% block title %}Practice · {{ topic.title }}{% endblock %}
 {% block content %}
+{% include "topics/_header.html" %}
 <div class="practice-head">
   <div>
-    <h1>Practice</h1>
     <p class="muted">Write Python, run it, and check it against tests. Everything runs in your browser. Your code saves as you type.</p>
   </div>
   <div class="banner-actions">
@@ -45,7 +45,7 @@
 {% endfor %}
 <p class="muted small" id="empty-filter" hidden>No exercises match this filter.</p>
 {% else %}
-<p class="muted">No exercises are installed. Add Markdown files to the <code>practice/</code> folder.</p>
+<p class="muted">This topic has no exercises yet. Add Markdown files to its <code>practice/</code> folder.</p>
 {% endif %}
 {% endblock %}
 {% block scripts %}

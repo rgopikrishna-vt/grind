@@ -4,7 +4,7 @@ import secrets
 from dotenv import load_dotenv
 from flask import Flask
 
-from . import db, exams, auth, views, render, practice, practice_views
+from . import db, auth, views, render, practice_views, topic_views, topics
 
 
 def _load_env_files():
@@ -28,8 +28,8 @@ def create_app(test_config=None):
         # Optional direct (non -pooler) Neon URL, used only for creating the schema at startup.
         DATABASE_URL_UNPOOLED=os.environ.get("DATABASE_URL_UNPOOLED", ""),
         DATABASE=os.environ.get("INTERVIEWIQ_DB", os.path.join(app.instance_path, "interviewiq.sqlite3")),
-        EXAMS_DIR=os.environ.get("INTERVIEWIQ_EXAMS", os.path.join(os.path.dirname(app.root_path), "exams")),
-        PRACTICE_DIR=os.environ.get("GRIND_PRACTICE", os.path.join(os.path.dirname(app.root_path), "practice")),
+        # One folder per topic, each with its lesson, practice exercises and exams (see app/topics.py).
+        TOPICS_DIR=os.environ.get("GRIND_TOPICS", os.path.join(os.path.dirname(app.root_path), "topics")),
         # Pyodide (Python for the browser) runs practice code client-side. Must end with "/".
         PYODIDE_URL=os.environ.get("PYODIDE_URL", "https://cdn.jsdelivr.net/npm/pyodide@0.29.5/"),
         # Seconds of slack after the deadline for the final auto-submit request to arrive.
@@ -42,12 +42,12 @@ def create_app(test_config=None):
     app.config["SECRET_KEY"] = app.config.get("SECRET_KEY") or os.environ.get("SECRET_KEY") or _instance_secret(app)
 
     db.init_app(app)
-    exams.init_app(app)
-    practice.init_app(app)
+    topics.init_app(app)
     render.init_app(app)
     app.register_blueprint(auth.bp)
     app.register_blueprint(views.bp)
     app.register_blueprint(practice_views.bp)
+    app.register_blueprint(topic_views.bp)
     return app
 
 
