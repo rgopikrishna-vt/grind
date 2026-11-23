@@ -12,7 +12,7 @@ Expected Markdown layout (see the Python Basics quiz for an example):
     1. **B** — explanation
 
 Usage:
-    python tools/md_to_exam.py QUIZ.md exams/my-exam.json \
+    python tools/md_to_exam.py QUIZ.md topics/my-topic/exams/my-exam.json \
         --id my-exam --title "My Exam" --minutes 60 [--description "..."]
 """
 import argparse

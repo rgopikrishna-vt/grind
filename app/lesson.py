@@ -102,10 +102,11 @@ def _renderer(link_for):
         tok = tokens[idx]
         lang = tok.info.strip().split(" ")[0] if tok.info else ""
         body = _highlight(tok.content, lang, None) or str(escape(tok.content))
-        try_btn = ""
-        if lang in ("python", "py", "python3", "pycon"):
-            try_btn = '<button type="button" class="btn ghost try-code small" title="Open this code in a new scratchpad notebook">Try it ▸</button>'
-        return f'<div class="lesson-code"><pre class="code hl"><code>{body.rstrip()}</code></pre>{try_btn}</div>\n'
+        if lang not in ("python", "py", "python3"):
+            return f'<div class="lesson-code"><pre class="code hl"><code>{body.rstrip()}</code></pre></div>\n'
+        head = ('<div class="code-head"><span>Python</span><button type="button" class="linkish try-code" '
+                'title="Open this code in a new scratchpad notebook and run it">Try it in the scratchpad ▸</button></div>')
+        return f'<div class="lesson-code has-head">{head}<pre class="code hl"><code>{body.rstrip()}</code></pre></div>\n'
 
     def table_open(_self, tokens, idx, options, env):
         return '<div class="table-wrap"><table class="lesson-table">\n'

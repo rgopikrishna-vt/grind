@@ -66,7 +66,7 @@
   var form = document.getElementById("try-form");
   document.querySelectorAll(".try-code").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      form.elements.code.value = btn.parentNode.querySelector("pre").textContent;
+      form.elements.code.value = btn.closest(".lesson-code").querySelector("pre").textContent;
       form.submit();
     });
   });
