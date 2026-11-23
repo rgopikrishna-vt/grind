@@ -4,7 +4,7 @@
 {% block main_class %}container wide{% endblock %}
 {% block content %}
 <div class="nb-head">
-  <div class="crumbs small"><a href="{{ url_for('practice.index') }}">Practice</a> <span class="muted">/ {{ ex.topic }}</span></div>
+  <div class="crumbs small"><a href="{{ url_for('topics.overview', topic_id=topic.id) }}">{{ topic.title }}</a> <span class="muted">/</span> <a href="{{ url_for('topics.practice', topic_id=topic.id) }}">Practice</a> <span class="muted">/ {{ ex.topic }}</span>{% if lesson_section %} · <a href="{{ url_for('topics.section', topic_id=topic.id, section_id=lesson_section.id) }}">Lesson: {{ lesson_section.title }}</a>{% endif %}</div>
   <div class="nb-title-row">
     <h1>{{ ex.number }}. {{ ex.title }}</h1>
     <span class="pill diff-{{ ex.difficulty }}">{{ ex.difficulty }}</span>
@@ -80,7 +80,7 @@
 
   <nav class="ex-nav">
     {% if prev_id %}<a class="btn" href="{{ url_for('practice.exercise', exercise_id=prev_id) }}">← Previous</a>{% else %}<span></span>{% endif %}
-    <a class="btn ghost" href="{{ url_for('practice.index') }}">All exercises</a>
+    <a class="btn ghost" href="{{ url_for('topics.practice', topic_id=topic.id) }}">All exercises</a>
     {% if next_id %}<a class="btn" id="next-link" href="{{ url_for('practice.exercise', exercise_id=next_id) }}">Next →</a>{% else %}<span></span>{% endif %}
   </nav>
   <p class="small muted kbd-hint">Keys: Ctrl/Cmd+Enter runs the cell, Tab indents, Ctrl/Cmd+/ toggles a comment.</p>

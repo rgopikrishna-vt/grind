@@ -44,6 +44,13 @@ CREATE TABLE IF NOT EXISTS practice_progress (
     updated_at TEXT NOT NULL,
     PRIMARY KEY (user_id, exercise_id)
 );
+CREATE TABLE IF NOT EXISTS lesson_progress (
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    topic_id TEXT NOT NULL,
+    section_id TEXT NOT NULL,
+    read_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, topic_id, section_id)
+);
 CREATE TABLE IF NOT EXISTS notebooks (
     id {pk},
     user_id INTEGER NOT NULL REFERENCES users(id),

@@ -1,0 +1,16 @@
+{# One exam card. Needs `c` from exam_stats(). #}
+<article class="card exam-card">
+  <h3><a href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ c.exam.title }}</a></h3>
+  {% if c.exam.description %}<p class="muted small">{{ c.exam.description }}</p>{% endif %}
+  <ul class="facts small">
+    <li><strong>{{ c.exam.questions|length }}</strong> questions</li>
+    <li><strong>{{ c.exam.duration_minutes }}</strong> min</li>
+    <li>Pass at <strong>{{ c.exam.pass_percent }}%</strong></li>
+  </ul>
+  <p class="small">{% if c.attempts %}Attempts: {{ c.attempts }} · Best: <strong>{{ c.best }}%</strong>{% else %}Not attempted yet{% endif %}</p>
+  {% if c.active_id %}
+    <a class="btn primary" href="{{ url_for('views.take', attempt_id=c.active_id) }}">Resume attempt</a>
+  {% else %}
+    <a class="btn primary" href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ "Retake" if c.attempts else "Start" }}</a>
+  {% endif %}
+</article>

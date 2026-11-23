@@ -13,8 +13,7 @@
     <a class="brand" href="{{ url_for('views.dashboard') }}">Grind</a>
     {% if g.user %}
     <nav>
-      <a href="{{ url_for('views.dashboard') }}" {% if request.blueprint == 'views' and request.endpoint != 'views.results' %}class="active"{% endif %}>Exams</a>
-      <a href="{{ url_for('practice.index') }}" {% if request.endpoint and request.endpoint.startswith('practice.') and 'notebook' not in request.endpoint %}class="active"{% endif %}>Practice</a>
+      <a href="{{ url_for('views.dashboard') }}" {% if request.endpoint and request.endpoint != 'views.results' and (request.blueprint in ('views', 'topics') or request.endpoint == 'practice.exercise') %}class="active"{% endif %}>Topics</a>
       <a href="{{ url_for('practice.notebooks') }}" {% if request.endpoint and 'notebook' in request.endpoint %}class="active"{% endif %}>Scratchpad</a>
       <a href="{{ url_for('views.results') }}" {% if request.endpoint == 'views.results' %}class="active"{% endif %}>My results</a>
       <form method="post" action="{{ url_for('auth.logout') }}" class="inline">

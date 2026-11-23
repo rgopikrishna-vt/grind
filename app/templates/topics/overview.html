@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ topic.title }}{% endblock %}
+{% block content %}
+{% include "topics/_header.html" %}
+{% if topic.description %}<p class="muted lead">{{ topic.description }}</p>{% endif %}
+
+<div class="steps">
+  {% if p.lesson %}
+  <article class="card step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h2><a href="{{ url_for('topics.lesson', topic_id=topic.id) }}">Lesson</a></h2>
+      <p class="muted small">{{ topic.lesson.title }}. {{ p.lesson.total }} sections, read in order.</p>
+      <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * p.lesson.read / p.lesson.total)|round|int }}%"></span></div>
+      <p class="small"><strong>{{ p.lesson.read }}</strong> of {{ p.lesson.total }} sections read</p>
+      {% if p.lesson.next %}
+        <a class="btn primary" href="{{ url_for('topics.section', topic_id=topic.id, section_id=p.lesson.next.id) }}">{{ "Continue" if p.lesson.started else "Start" }}: {{ p.lesson.next.title }}</a>
+      {% else %}
+        <a class="btn" href="{{ url_for('topics.lesson', topic_id=topic.id) }}">Review the lesson</a>
+      {% endif %}
+    </div>
+  </article>
+  {% endif %}
+
+  {% if p.practice %}
+  <article class="card step">
+    <div class="step-num">{{ 2 if p.lesson else 1 }}</div>
+    <div class="step-body">
+      <h2><a href="{{ url_for('topics.practice', topic_id=topic.id) }}">Practice</a></h2>
+      <p class="muted small">{{ p.practice.total }} coding exercises, run and checked in your browser.</p>
+      <div class="bar wide-bar" aria-hidden="true"><span class="good" style="width: {{ (100 * p.practice.solved / p.practice.total)|round|int }}%"></span></div>
+      <p class="small"><strong>{{ p.practice.solved }}</strong> of {{ p.practice.total }} solved</p>
+      {% if p.practice.next %}
+        <a class="btn primary" href="{{ url_for('practice.exercise', exercise_id=p.practice.next.id) }}">{{ "Continue" if p.practice.solved else "Start" }}: {{ p.practice.next.title }}</a>
+      {% endif %}
+      <a class="btn" href="{{ url_for('topics.practice', topic_id=topic.id) }}">All exercises</a>
+    </div>
+  </article>
+  {% endif %}
+
+  {% for c in p.exams %}
+  <article class="card step">
+    <div class="step-num">{{ (1 if p.lesson else 0) + (1 if p.practice else 0) + loop.index }}</div>
+    <div class="step-body">
+      <h2><a href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ "Quiz" if p.exams|length == 1 else c.exam.title }}</a></h2>
+      <p class="muted small">{{ c.exam.questions|length }} questions in {{ c.exam.duration_minutes }} minutes, pass at {{ c.exam.pass_percent }}%.</p>
+      {% if c.best is not none %}
+      <div class="bar wide-bar" aria-hidden="true"><span class="{{ 'good' if c.best >= c.exam.pass_percent else 'weak' }}" style="width: {{ c.best }}%"></span></div>
+      {% endif %}
+      <p class="small">{% if c.attempts %}Best <strong>{{ c.best }}%</strong> over {{ c.attempts }} attempt{{ "s" if c.attempts != 1 }}{% else %}Not taken yet{% endif %}</p>
+      {% if c.active_id %}
+        <a class="btn primary" href="{{ url_for('views.take', attempt_id=c.active_id) }}">Resume attempt</a>
+      {% else %}
+        <a class="btn primary" href="{{ url_for('views.exam_detail', exam_id=c.exam.id) }}">{{ "Retake" if c.attempts else "Start" }}</a>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{# Section list with read marks. Needs topic, lesson, done; optional sec (current). #}
+<ol class="lesson-toc">
+  {% for s in lesson.sections %}
+  <li class="{{ 'read' if s.id in done }}{{ ' current' if sec and sec.id == s.id }}">
+    <a href="{{ url_for('topics.section', topic_id=topic.id, section_id=s.id) }}" {% if sec and sec.id == s.id %}aria-current="page"{% endif %}>
+      <span class="toc-mark" aria-label="{{ 'Read' if s.id in done else 'Not read' }}">{{ "✓" if s.id in done else (s.number or loop.index) }}</span>
+      <span class="toc-title">{{ s.heading|md_inline }}</span>
+      {% if s.exercises %}<span class="toc-ex small muted" title="{{ s.exercises|length }} practice exercise{{ 's' if s.exercises|length != 1 }}">{{ s.exercises|length }} ✎</span>{% endif %}
+    </a>
+  </li>
+  {% endfor %}
+</ol>

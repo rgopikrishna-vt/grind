@@ -9,7 +9,8 @@ from flask import Blueprint, abort, current_app, flash, g, jsonify, redirect, re
 
 from .auth import login_required
 from .db import get_db, now, to_iso
-from .practice import all_exercises, get_exercise, topics
+from .practice import get_exercise
+from .topics import all_topics, get_topic
 
 bp = Blueprint("practice", __name__)
 
@@ -17,11 +18,6 @@ MAX_CODE = 100_000
 MAX_NOTEBOOK = 1_000_000
 MAX_CELLS = 300
 MAX_TITLE = 120
-
-
-def _progress_map():
-    rows = get_db().execute("SELECT * FROM practice_progress WHERE user_id = ?", (g.user["id"],)).fetchall()
-    return {r["exercise_id"]: r for r in rows}
 
 
 def _progress(exercise_id):
@@ -53,33 +49,16 @@ def _code_from(data):
     return code
 
 
-def practice_summary(user_id):
-    """Solved count for the dashboard card."""
-    row = get_db().execute(
-        "SELECT COUNT(*) AS n FROM practice_progress WHERE user_id = ? AND solved_at IS NOT NULL", (user_id,)
-    ).fetchone()
-    ids = set(all_exercises())
-    return {"solved": min(row["n"], len(ids)), "total": len(ids)}
-
-
 # ---------- exercises ----------
 
 @bp.route("/practice")
 @login_required
 def index():
-    progress = _progress_map()
-    groups = []
-    for topic, exercises in topics().items():
-        items = []
-        for ex in exercises:
-            p = progress.get(ex["id"])
-            state = "solved" if p and p["solved_at"] else ("started" if p and (p["code"] or p["attempts"]) else "new")
-            items.append({"ex": ex, "state": state, "attempts": p["attempts"] if p else 0})
-        groups.append({"topic": topic, "rows": items, "solved": sum(1 for i in items if i["state"] == "solved")})
-    total = len(all_exercises())
-    solved = sum(gr["solved"] for gr in groups)
-    nxt = next((i["ex"] for gr in groups for i in gr["rows"] if i["state"] != "solved"), None)
-    return render_template("practice/index.html", groups=groups, total=total, solved=solved, next_ex=nxt)
+    """Practice now lives inside each topic. Send old links to the only topic with exercises, or home."""
+    with_practice = [t for t in all_topics().values() if t["exercises"]]
+    if len(with_practice) == 1:
+        return redirect(url_for("topics.practice", topic_id=with_practice[0]["id"]))
+    return redirect(url_for("views.dashboard"))
 
 
 @bp.route("/practice/<exercise_id>")
@@ -87,11 +66,15 @@ def index():
 def exercise(exercise_id):
     ex = get_exercise(exercise_id) or abort(404)
     p = _progress(exercise_id)
-    ids = list(all_exercises())
+    topic = get_topic(ex["topic_id"])
+    ids = [e["id"] for e in topic["exercises"]]
     i = ids.index(exercise_id)
+    section = topic["lesson"]["by_number"].get(ex["lesson"]) if topic["lesson"] and ex["lesson"] else None
     return render_template(
         "practice/exercise.html",
         ex=ex,
+        topic=topic,
+        lesson_section=section,
         progress=p,
         code=(p["code"] if p and p["code"] is not None else ex["starter"]),
         prev_id=ids[i - 1] if i > 0 else None,
@@ -212,10 +195,20 @@ def new_notebook():
     db = get_db()
     count = db.execute("SELECT COUNT(*) AS n FROM notebooks WHERE user_id = ?", (g.user["id"],)).fetchone()["n"]
     stamp = to_iso(now())
+    title = f"Notebook {count + 1}"
     cells = WELCOME_CELLS if count == 0 else [{"type": "code", "source": ""}]
+    code = request.form.get("code")
+    if code:  # "Try it" on a lesson code block opens that code in a fresh notebook
+        if len(code) > MAX_CODE:
+            abort(400)
+        source = (request.form.get("source") or "").strip()[:MAX_TITLE]
+        title = source or title
+        cells = [{"type": "code", "source": code.rstrip("\n")}, {"type": "code", "source": ""}]
+        if source:
+            cells.insert(0, {"type": "markdown", "source": f"From the lesson: **{source}**. Run the cell, then change it and run it again."})
     nb_id = db.execute(
         "INSERT INTO notebooks (user_id, title, cells, created_at, updated_at) VALUES (?, ?, ?, ?, ?) RETURNING id",
-        (g.user["id"], f"Notebook {count + 1}", json.dumps(cells), stamp, stamp),
+        (g.user["id"], title, json.dumps(cells), stamp, stamp),
     ).fetchone()["id"]
     db.commit()
     return redirect(url_for("practice.notebook", nb_id=nb_id))

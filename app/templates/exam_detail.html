@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ exam.title }}{% endblock %}
 {% block content %}
-<p><a href="{{ url_for('views.dashboard') }}">← All exams</a></p>
+{% if topic %}{% include "topics/_header.html" %}{% else %}<p><a href="{{ url_for('views.dashboard') }}">← All topics</a></p>{% endif %}
 <div class="card">
-  <h1>{{ exam.title }}</h1>
+  <h2 class="card-h">{{ exam.title }}</h2>
   <p>{{ exam.description }}</p>
   <ul class="facts">
     <li><strong>{{ exam.questions|length }}</strong> questions</li>
@@ -18,6 +18,7 @@
     <li>When time runs out, the exam submits itself with the answers you have saved.</li>
     <li>Unanswered questions count as wrong. There is no negative marking, so answer everything.</li>
   </ul>
+  {% if topic and topic.lesson %}<p class="small muted">Not ready yet? <a href="{{ url_for('topics.lesson', topic_id=topic.id) }}">Read the lesson</a>{% if topic.exercises %} or <a href="{{ url_for('topics.practice', topic_id=topic.id) }}">practice</a> first{% endif %}.</p>{% endif %}
   {% if active %}
     <a class="btn primary" href="{{ url_for('views.take', attempt_id=active.id) }}">Resume your attempt</a>
   {% else %}
